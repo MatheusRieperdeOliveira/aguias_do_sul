@@ -1,6 +1,6 @@
 FROM php:8.3-fpm
 
-ARG user=aguias
+ARG user=root
 ARG uid=1000
 
 RUN apt-get update && apt-get install -y \
@@ -47,8 +47,8 @@ RUN mkdir -p /home/$user/.composer && \
     chown -R $user:$user /home/$user
 
 # Supervisor configuration
-RUN mkdir -p /var/log/supervisor /var/run && \
-    chown -R $user:$user /var/log/supervisor /var/run
+RUN mkdir -p /var/log/supervisor /var/run/supervisor && \
+    chown -R $user:$user /var/log/supervisor /var/run/supervisor
 
 COPY docker/php/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
 
