@@ -18,5 +18,6 @@ class Pathfinder extends Model
         'responsible_phone',
         'email',
         'address',
+        'unit',
     ];
 }

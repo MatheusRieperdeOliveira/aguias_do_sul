@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('full_phone')->nullable();
             $table->date('birthday');
             $table->integer('age');
+            $table->string('unit');
             $table->string('responsible_name')->nullable();
             $table->string('responsible_phone')->nullable();
             $table->string('email')->nullable();

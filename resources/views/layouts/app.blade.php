@@ -9,14 +9,14 @@
     </style>
     <title>Aguias do Sul</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @livewireStyles
 </head>
 <body class="flex h-screen">
 @include('components.base.app-sidebar')
-
-<main class="flex-1 overflow-auto bg-secondary">
-    @yield('content')
+<main class="flex-1 overflow-auto bg-white">
+    {{$slot}}
 </main>
-
+@livewireScripts
 <script>
     lucide.createIcons();
 </script>

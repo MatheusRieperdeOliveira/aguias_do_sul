@@ -1,24 +1,15 @@
 <?php
 
-use Illuminate\Routing\Router;
-use App\Http\Controllers\HomeController;
+use Illuminate\Support\Facades\Route;
+use Livewire\Volt\Volt;
 use App\Http\Controllers\PathfinderController;
 
-$api = app('Illuminate\Routing\Router');
+Volt::route('/', 'home.index');
+Volt::route('/home', 'home.index')->name('home.index');
 
-$api->group([], function ($api) {
 
-    $api->group([
-        'prefix' => '/home',
-        'controller' => HomeController::class,
-    ], function (Router $api) {
-        $api->get('/', 'index')->name('home.index');
-    });
 
-    $api->group([
-        'prefix' => '/pathfinder',
-        'controller' => PathfinderController::class,
-    ], function (Router $api) {
-        $api->get('/', 'index')->name('pathfinder.index');
-    });
-});
+Volt::route('/pathfinder', 'pathfinder.index')->name('pathfinder.index');
+Route::post('/pathfinder', [PathfinderController::class, 'store'])->name('pathfinder.store');
+
+Volt::route('/pathfinder/create', 'pathfinder.create')->name('pathfinder.create');
