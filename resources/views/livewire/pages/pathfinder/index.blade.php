@@ -29,7 +29,7 @@ new #[Layout('layouts.app')] class extends Component
         </button>
     </div>
     <div class="flex flex-col items-center justify-between w-full p-8 gap-4">
-       <livewire:pathfinder.form />
-       <livewire:pathfinder.table :pathfinders="$pathfinders" />
+       <livewire:components.pathfinder.form />
+       <livewire:components.pathfinder.table :pathfinders="$pathfinders" />
     </div>
 </div>

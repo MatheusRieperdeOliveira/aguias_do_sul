@@ -35,6 +35,17 @@
                 <p>Desbravadores</p>
             </a>
 
+            <a
+                href="{{ route('unit.index') }}"
+                class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors
+                {{ request()->routeIs('unit.index')
+                    ? 'bg-primary text-primary-foreground'
+                    : 'text-muted-foreground hover:bg-secondary hover:text-secondary-foreground' }}"
+            >
+                <i data-lucide="id-card-lanyard" class="h-5 w-5"></i>
+                <p>Unidades</p>
+            </a>
+
         </nav>
 
         <div class="border-t border-border p-4">
