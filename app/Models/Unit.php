@@ -9,6 +9,7 @@ class Unit extends Model
 {
     protected $fillable = [
         'name',
+        'status',
     ];
 
     public function pathfinders(): HasMany

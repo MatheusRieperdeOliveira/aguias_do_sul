@@ -1,47 +1,46 @@
 <?php
 
-use App\Models\Pathfinder;
-use App\Services\PathfinderService;
+use App\Models\Unit;
+use App\Services\UnitService;
 use Livewire\Attributes\On;
 use Livewire\Volt\Component;
-use Carbon\Carbon;
 
 new class extends Component {
-    public $pathfinders = [];
+    public $units = [];
 
-    public function mount(PathfinderService $service)
+    public function mount(UnitService $service)
     {
         $this->load($service);
     }
 
-    #[On(['pathfinder-created', 'pathfinder-inactive', 'pathfinder-active'])]
-    public function load(PathfinderService $service)
+    #[On(['unit-created', 'unit-inactive', 'unit-active'])]
+    public function load(UnitService $service)
     {
-        $this->pathfinders = $service->getPathfinders();
+        $this->units = $service->getUnits();
     }
 
-    public function inactivate(string $pathfinder_id)
+    public function inactivate(string $unit_id)
     {
-        Pathfinder::query()->where('id', $pathfinder_id)->update([
+        Unit::query()->where('id', $unit_id)->update([
             'status' => 'inactive'
         ]);
 
-        $this->dispatch('pathfinder-inactive');
+        $this->dispatch('unit-inactive');
     }
 
-    public function activate(string $pathfinder_id)
+    public function activate(string $unit_id)
     {
-        Pathfinder::query()->where('id', $pathfinder_id)->update([
+        Unit::query()->where('id', $unit_id)->update([
             'status' => 'active'
         ]);
 
-        $this->dispatch('pathfinder-active');
+        $this->dispatch('unit-active');
     }
 };
 ?>
 
-<div class="w-full overflow-x-auto rounded-lg border border-gray-200"
-><div class="w-full h-13 flex items-center justify-end px-4">
+<div class="w-full overflow-x-auto rounded-lg border border-gray-200">
+    <div class="w-full h-13 flex items-center justify-end px-4">
         <div class="relative">
             <input type="text" wire:model="address" placeholder="Pesquisar"
                    class="h-10 rounded-lg border border-gray-300 pl-10 pr-2">
@@ -58,19 +57,16 @@ new class extends Component {
         <tr>
             <th class="min-w-[180px] px-4 py-2 text-left font-medium">Nome</th>
             <th class="min-w-[120px] px-4 py-2 text-left font-medium">Status</th>
-            <th class="min-w-[180px] px-4 py-2 text-left font-medium">Telefone</th>
-            <th class="min-w-[260px] px-4 py-2 text-left font-medium">Email</th>
-            <th class="min-w-[140px] px-4 py-2 text-left font-medium">Aniversário</th>
             <th class="min-w-[50px] px-4 py-2 text-left font-medium">Ações</th>
         </tr>
         </thead>
 
         <tbody>
-        @foreach($pathfinders as $pathfinder)
+        @foreach($units as $unit)
             <tr class="border-t border-gray-200">
-                <td class="px-4 py-2">{{$pathfinder->name}}</td>
+                <td class="px-4 py-2">{{$unit->name}}</td>
                 <td class="px-4 py-2">
-                    @if($pathfinder->status === 'active')
+                    @if($unit->status === 'active')
                         <div
                             class="w-13 h-6 bg-primary rounded-md flex items-center justify-center text-white text-sm font-semibold">
                             <p>
@@ -86,33 +82,12 @@ new class extends Component {
                         </div>
                     @endif
                 </td>
-                <td class="px-4 py-2">{{$pathfinder->full_phone}}</td>
-                <td class="px-4 py-2">{{$pathfinder->email}}</td>
                 <td class="px-4 py-2">
-                    <div
-                        class="w-30 h-12 bg-sky-400 rounded-md flex items-center justify-center text-white text-sm py-6 gap-1">
-                        <i data-lucide="cake" class="w-4 h-4"></i>
-
-                        <div class="flex flex-col items-center gap-1">
-                            <p>
-                                {{ Carbon::parse($pathfinder->birthday)->format('d/m/Y') }}
-                            </p>
-                            <div class="flex items-center gap-1">
-                                <p>
-                                    {{$pathfinder->age}}
-                                </p>
-                                <p>anos</p>
-                            </div>
-                        </div>
-                    </div>
-
-                </td>
-                <td class="px-4 py-2">
-                    <div class="w-full h-8 grid grid-cols-3 rounded-xl overflow-hidden text-white overflow-visible">
-                        @if($pathfinder->status === 'active')
+                    <div class="w-full h-8 grid grid-cols-2 rounded-xl overflow-hidden text-white overflow-visible">
+                        @if($unit->status === 'active')
                             <div class="group relative flex items-center justify-center bg-red-600 rounded-l-lg">
                                 <button
-                                    wire:click="inactivate({{$pathfinder->id}})"
+                                    wire:click="inactivate({{$unit->id}})"
                                     class="cursor-pointer flex items-center justify-center w-full h-full">
                                     <i data-lucide="x" class="w-4 h-4"></i>
                                 </button>
@@ -123,7 +98,7 @@ new class extends Component {
                         @else
                             <div class="group relative flex items-center justify-center bg-green-600 rounded-l-lg">
                                 <button
-                                    wire:click="activate({{$pathfinder->id}})"
+                                    wire:click="activate({{$unit->id}})"
                                     class="cursor-pointer flex items-center justify-center w-full h-full">
                                     <i data-lucide="check" class="w-4 h-4"></i>
                                 </button>
@@ -132,9 +107,9 @@ new class extends Component {
                                 </div>
                             </div>
                         @endif
-                        <div class="group relative flex items-center justify-center bg-blue-600">
+                        <div class="group relative flex items-center justify-center bg-blue-600 rounded-r-lg">
                             <button
-                                wire:click="$dispatch('open-pathfinder-modal', { pathfinderId: {{ $pathfinder->id }} })"
+                                wire:click="$dispatch('open-unit-modal', { unitId: {{ $unit->id }} })"
                                 class="cursor-pointer flex items-center justify-center w-full h-full">
                                 <i data-lucide="pencil" class="w-4 h-4"></i>
                             </button>
@@ -142,8 +117,6 @@ new class extends Component {
                                 Editar
                             </div>
                         </div>
-
-                        <livewire:components.pathfinder.barcode_modal :pathfinder="$pathfinder"/>
                     </div>
                 </td>
             </tr>

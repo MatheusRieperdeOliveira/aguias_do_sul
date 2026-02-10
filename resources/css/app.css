@@ -76,6 +76,10 @@
     --sidebar-ring: oklch(0.439 0 0);
 }
 
+select {
+    font-family: Geist !important;
+}
+
 @theme inline {
     --font-sans: 'Geist', 'Geist Fallback';
     --font-mono: 'Geist Mono', 'Geist Mono Fallback';

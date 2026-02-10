@@ -13,6 +13,9 @@
 
         <nav class="flex-1 space-y-1 p-4">
 
+            <p class="text-sm font-semibold text-gray-500">
+                PRINCIPAL
+            </p>
             <a
                 href="{{ route('home.index') }}"
                 class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors
@@ -35,6 +38,26 @@
                 <p>Desbravadores</p>
             </a>
 
+            <p class="text-sm font-semibold text-gray-500">
+                GESTÃO
+            </p>
+
+            <a
+                href="#"
+                class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors opacity-50 cursor-not-allowed"
+            >
+                <i data-lucide="bookmark-check" class="h-5 w-5"></i>
+                <p>Presença (Em breve)</p>
+            </a>
+
+            <a
+                href="#"
+                class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors opacity-50 cursor-not-allowed"
+            >
+                <i data-lucide="award" class="h-5 w-5"></i>
+                <p>Especialidade (Em breve)</p>
+            </a>
+
             <a
                 href="{{ route('unit.index') }}"
                 class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors
@@ -42,10 +65,45 @@
                     ? 'bg-primary text-primary-foreground'
                     : 'text-muted-foreground hover:bg-secondary hover:text-secondary-foreground' }}"
             >
-                <i data-lucide="id-card-lanyard" class="h-5 w-5"></i>
+                <i data-lucide="flag" class="h-5 w-5"></i>
                 <p>Unidades</p>
             </a>
 
+            <a
+                href="{{ route('event.index') }}"
+                class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors
+                {{ request()->routeIs('event.index')
+                    ? 'bg-primary text-primary-foreground'
+                    : 'text-muted-foreground hover:bg-secondary hover:text-secondary-foreground' }}"
+            >
+                <i data-lucide="calendar" class="h-5 w-5"></i>
+                <p>Eventos</p>
+            </a>
+
+            <p class="text-sm font-semibold text-gray-500">
+                PONTUAÇÕES
+            </p>
+            <a
+                href="#"
+                class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors opacity-50 cursor-not-allowed"
+            >
+                <i data-lucide="calendar" class="h-5 w-5"></i>
+                <p>Requisitos (Em breve)</p>
+            </a>
+            <a
+                href="#"
+                class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors opacity-50 cursor-not-allowed"
+            >
+                <i data-lucide="calendar" class="h-5 w-5"></i>
+                <p>Desbravador (Em breve)</p>
+            </a>
+            <a
+                href="#"
+                class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors opacity-50 cursor-not-allowed"
+            >
+                <i data-lucide="calendar" class="h-5 w-5"></i>
+                <p>Unidade (Em breve)</p>
+            </a>
         </nav>
 
         <div class="border-t border-border p-4">

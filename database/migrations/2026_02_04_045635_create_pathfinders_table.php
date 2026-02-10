@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('full_phone')->nullable();
             $table->date('birthday');
             $table->integer('age');
-            $table->foreignId('unit')->references('id')->on('units')->onDelete('cascade');
+            $table->foreignId('unit_id')->references('id')->on('units')->onDelete('cascade');
             $table->string('responsible_name')->nullable();
             $table->string('responsible_phone')->nullable();
             $table->string('email')->nullable();
