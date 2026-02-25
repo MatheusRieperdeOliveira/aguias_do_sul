@@ -27,6 +27,7 @@ class extends Component {
     </div>
     <div class="flex flex-col items-center justify-between w-full p-8 gap-4">
         <livewire:components.pathfinder.form/>
+        <livewire:components.pathfinder.barcode/>
         <livewire:components.pathfinder.table/>
     </div>
 </div>

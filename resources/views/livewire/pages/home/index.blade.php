@@ -15,4 +15,6 @@ new #[Layout('layouts.app')] class extends Component
             <p class="text-muted-foreground mt-1">Visão geral do clube de desbravadores</p>
         </div>
     </div>
+
+
 </div>

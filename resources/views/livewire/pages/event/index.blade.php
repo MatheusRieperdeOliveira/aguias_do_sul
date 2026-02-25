@@ -136,23 +136,21 @@ class extends Component {
             </div>
         </div>
 
-        <!-- Calendar Grid -->
         <div class="grid grid-cols-7 border-l border-gray-200">
-            <!-- Day Headers -->
             @foreach (['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'] as $day)
                 <div class="text-center text-sm font-medium text-gray-500 py-2 border-b border-gray-200">{{ $day }}</div>
             @endforeach
 
-            <!-- Day Cells -->
             @foreach ($this->days as $day)
                 <div @class([
-                    'relative h-36 border-b border-r border-gray-200 p-2 flex flex-col transition-colors',
+                    'relative h-36 border-b border-r border-gray-200 p-2 flex flex-col transition-colors cursor-pointer',
                     'bg-gray-50 text-gray-400' => !$day['is_current_month'],
                     'bg-white hover:bg-gray-50' => $day['is_current_month'],
                 ]) @if($day['is_current_month']) wire:click="openDayModal('{{ $day['date']->toDateString() }}')" @endif>
                     <span @class([
                         'font-semibold' => $day['date']->isToday(),
                         'text-primary' => $day['date']->isToday(),
+                        'bg-primary w-10 text-center text-white rounded-full' => $day['date']->isToday(),
                     ])>{{ $day['date']->day }}</span>
 
                     <div class="mt-1 flex-1 overflow-hidden space-y-1">
@@ -171,14 +169,13 @@ class extends Component {
         </div>
     </div>
 
-    <!-- Day Details Modal -->
     @if ($selectedDate)
         <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60" x-data="{ open: @entangle('selectedDate') }" x-show="open" x-on:keydown.escape.window="open = null">
             <div class="w-full max-w-lg rounded-lg bg-white p-6" @click.away="open = null">
                 <div class="flex items-center justify-between mb-4">
                     <h2 class="text-2xl font-bold">{{ \Carbon\Carbon::parse($selectedDate)->translatedFormat('l, d \d\e F') }}</h2>
                     <button wire:click="closeDayModal" class="p-2 rounded-full hover:bg-gray-200">
-                        <i data-lucide="x" class="w-5 h-5"></i>
+                        <i data-lucide="x" class="w-5 h-5 cursor-pointer"></i>
                     </button>
                 </div>
 

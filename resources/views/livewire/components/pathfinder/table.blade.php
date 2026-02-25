@@ -14,34 +14,36 @@ new class extends Component {
         $this->load($service);
     }
 
-    #[On(['pathfinder-created', 'pathfinder-inactive', 'pathfinder-active'])]
+    #[On('pathfinder-created')]
+    #[On('pathfinder-inactive')]
+    #[On('pathfinder-active')]
     public function load(PathfinderService $service)
     {
         $this->pathfinders = $service->getPathfinders();
     }
 
-    public function inactivate(string $pathfinder_id)
+    #[On('inactivate-pathfinder')]
+    public function inactivate($pathfinderId)
     {
-        Pathfinder::query()->where('id', $pathfinder_id)->update([
+        Pathfinder::query()->where('id', $pathfinderId)->update([
             'status' => 'inactive'
         ]);
-
         $this->dispatch('pathfinder-inactive');
     }
 
-    public function activate(string $pathfinder_id)
+    #[On('activate-pathfinder')]
+    public function activate($pathfinderId)
     {
-        Pathfinder::query()->where('id', $pathfinder_id)->update([
+        Pathfinder::query()->where('id', 'like', $pathfinderId)->update([
             'status' => 'active'
         ]);
-
         $this->dispatch('pathfinder-active');
     }
 };
 ?>
 
-<div class="w-full overflow-x-auto rounded-lg border border-gray-200"
-><div class="w-full h-13 flex items-center justify-end px-4">
+<div class="w-full overflow-x-auto rounded-lg border border-gray-200">
+    <div class="w-full h-13 flex items-center justify-end px-4">
         <div class="relative">
             <input type="text" wire:model="address" placeholder="Pesquisar"
                    class="h-10 rounded-lg border border-gray-300 pl-10 pr-2">
@@ -105,46 +107,9 @@ new class extends Component {
                             </div>
                         </div>
                     </div>
-
                 </td>
                 <td class="px-4 py-2">
-                    <div class="w-full h-8 grid grid-cols-3 rounded-xl overflow-hidden text-white overflow-visible">
-                        @if($pathfinder->status === 'active')
-                            <div class="group relative flex items-center justify-center bg-red-600 rounded-l-lg">
-                                <button
-                                    wire:click="inactivate({{$pathfinder->id}})"
-                                    class="cursor-pointer flex items-center justify-center w-full h-full">
-                                    <i data-lucide="x" class="w-4 h-4"></i>
-                                </button>
-                                <div class="absolute bottom-full mb-2 hidden group-hover:block w-max px-2 py-1 bg-gray-800 text-white text-xs rounded shadow-lg z-50">
-                                    Inativar
-                                </div>
-                            </div>
-                        @else
-                            <div class="group relative flex items-center justify-center bg-green-600 rounded-l-lg">
-                                <button
-                                    wire:click="activate({{$pathfinder->id}})"
-                                    class="cursor-pointer flex items-center justify-center w-full h-full">
-                                    <i data-lucide="check" class="w-4 h-4"></i>
-                                </button>
-                                <div class="absolute bottom-full mb-2 hidden group-hover:block w-max px-2 py-1 bg-gray-800 text-white text-xs rounded shadow-lg z-50">
-                                    Ativar
-                                </div>
-                            </div>
-                        @endif
-                        <div class="group relative flex items-center justify-center bg-blue-600">
-                            <button
-                                wire:click="$dispatch('open-pathfinder-modal', { pathfinderId: {{ $pathfinder->id }} })"
-                                class="cursor-pointer flex items-center justify-center w-full h-full">
-                                <i data-lucide="pencil" class="w-4 h-4"></i>
-                            </button>
-                            <div class="absolute bottom-full mb-2 hidden group-hover:block w-max px-2 py-1 bg-gray-800 text-white text-xs rounded shadow-lg z-50">
-                                Editar
-                            </div>
-                        </div>
-
-                        <livewire:components.pathfinder.barcode_modal :pathfinder="$pathfinder"/>
-                    </div>
+                    @livewire('components.pathfinder.actions', ['pathfinder' => $pathfinder])
                 </td>
             </tr>
         @endforeach
