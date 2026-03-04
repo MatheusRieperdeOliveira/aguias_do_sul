@@ -22,7 +22,7 @@ $navigation = [
         'key' => 'pontuacoes',
         'title' => 'PONTUAÇÕES',
         'links' => [
-            ['label' => 'Requisitos (Em breve)', 'icon' => 'calendar'],
+            ['label' => 'Requisitos', 'icon' => 'chart-no-axes-column', 'route' => 'requirement.index'],
             ['label' => 'Desbravador (Em breve)', 'icon' => 'calendar'],
             ['label' => 'Unidade (Em breve)', 'icon' => 'calendar'],
         ],

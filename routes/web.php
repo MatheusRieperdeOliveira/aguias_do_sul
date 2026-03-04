@@ -12,3 +12,5 @@ Volt::route('/pathfinder', 'pages.pathfinder.index')->name('pathfinder.index');
 Volt::route('/unit', 'pages.unit.index')->name('unit.index');
 
 Volt::route('/events', 'pages.event.index')->name('event.index');
+
+Volt::route('/requirements', 'pages.requirement.index')->name('requirement.index');
