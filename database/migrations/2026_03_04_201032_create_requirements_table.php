@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->integer('score');
+            $table->string('type');
             $table->timestamps();
         });
     }

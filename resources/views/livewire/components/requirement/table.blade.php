@@ -18,7 +18,7 @@ new class extends Component {
     #[On('requirement-created')]
     public function load(RequirementService $service)
     {
-        $this->requirements = $service->getRequirements();
+        $this->requirements = $service->geAlltRequirements();
     }
 
 };
@@ -42,6 +42,7 @@ new class extends Component {
         <tr>
             <th class="min-w-[180px] px-4 py-2 text-left font-medium">Título</th>
             <th class="min-w-[120px] px-4 py-2 text-left font-medium">Pontos</th>
+            <th class="min-w-[120px] px-4 py-2 text-left font-medium">Tipo</th>
             <th class="min-w-[50px] px-4 py-2 text-left font-medium">Ações</th>
         </tr>
         </thead>
@@ -51,6 +52,17 @@ new class extends Component {
             <tr class="border-t border-gray-200">
                 <td class="px-4 py-2">{{$requirement->title}}</td>
                 <td class="px-4 py-2">{{$requirement->score}}</td>
+                <td class="px-4 py-2">
+                    @if($requirement->type === "pathfinder")
+                        <div class="bg-primary w-30 h-6 text-white text-center rounded-lg">
+                            desbravador
+                        </div>
+                    @else
+                        <div class="bg-orange-600 w-30 h-6 text-white text-center rounded-lg">
+                            unidade
+                        </div>
+                    @endif
+                </td>
                 <td class="px-4 py-2"><livewire:components.requirement.actions :requirement="$requirement"/></td>
             </tr>
         @endforeach

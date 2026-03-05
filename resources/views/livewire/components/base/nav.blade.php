@@ -14,7 +14,7 @@ new class extends Component {
             {{ $title }}
         </p>
         <button @click="$store.navbar.toggle('{{ $sectionKey }}')" class="cursor-pointer p-1">
-            <i data-lucide="chevron-down" class="h-5 w-5 transition-transform duration-300 ease-in-out" :class="{ 'rotate-180': !$store.navbar.items.{{ $sectionKey }} }"></i>
+            <i data-lucide="chevron-up" class="h-5 w-5 transition-transform duration-300 ease-in-out" :class="{ 'rotate-180': !$store.navbar.items.{{ $sectionKey }} }"></i>
         </button>
     </div>
 

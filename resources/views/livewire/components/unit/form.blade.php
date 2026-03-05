@@ -19,7 +19,7 @@ new class extends Component
             <h1 class="text-3xl font-bold text-foreground">Nova unidade</h1>
             <p class="text-muted-foreground mt-1">Informe os dados do novo desbravador</p>
         </div>
-        <form method="POST" action="{{ route('pathfinder.store') }}">
+        <form method="POST">
             @csrf
             <div class="grid grid-cols-2 gap-3">
                 <label>Nome

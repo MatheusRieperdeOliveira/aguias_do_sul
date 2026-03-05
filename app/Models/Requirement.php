@@ -9,5 +9,6 @@ class Requirement extends Model
     protected $fillable = [
         'title',
         'score',
+        'type',
     ];
 }

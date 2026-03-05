@@ -1,0 +1,31 @@
+{
+    "debug": true,
+    "port": 6001,
+    "metrics": {
+        "enabled": true,
+        "port": 9601
+    },
+    "cors": {
+        "origin": "*",
+        "methods": "GET,POST,PUT,DELETE,OPTIONS",
+        "headers": "Origin,Content-Type,X-Auth-Token,X-Requested-With,Accept,Authorization,Cache-Control,X-File-Name",
+        "credentials": true
+    },
+    "appManager": {
+        "array": {
+            "apps": [
+                {
+                    "id": "app-id",
+                    "key": "app-key",
+                    "secret": "app-secret",
+                    "enableClientMessages": true,
+                    "enabled": true,
+                    "maxConnections": 100,
+                    "maxBackendEventsPerSecond": 100,
+                    "maxClientEventsPerSecond": 60,
+                    "maxReadRequestsPerSecond": 100
+                }
+            ]
+        }
+    }
+}

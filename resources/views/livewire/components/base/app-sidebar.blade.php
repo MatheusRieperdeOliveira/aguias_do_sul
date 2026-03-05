@@ -1,33 +1,33 @@
 @php
-$navigation = [
-    [
-        'key' => 'principal',
-        'title' => 'PRINCIPAL',
-        'links' => [
-            ['label' => 'Dashboard', 'icon' => 'compass', 'route' => 'home.index'],
+    $navigation = [
+        [
+            'key' => 'principal',
+            'title' => 'PRINCIPAL',
+            'links' => [
+                ['label' => 'Dashboard', 'icon' => 'compass', 'route' => 'home.index'],
+            ],
         ],
-    ],
-    [
-        'key' => 'gestao',
-        'title' => 'GESTÃO',
-        'links' => [
-            ['label' => 'Desbravadores', 'icon' => 'users', 'route' => 'pathfinder.index'],
-            ['label' => 'Unidades', 'icon' => 'flag', 'route' => 'unit.index'],
-            ['label' => 'Eventos', 'icon' => 'calendar', 'route' => 'event.index'],
-            ['label' => 'Presença (Em breve)', 'icon' => 'bookmark-check'],
-            ['label' => 'Especialidade (Em breve)', 'icon' => 'award'],
+        [
+            'key' => 'gestao',
+            'title' => 'GESTÃO',
+            'links' => [
+                ['label' => 'Desbravadores', 'icon' => 'users', 'route' => 'pathfinder.index'],
+                ['label' => 'Unidades', 'icon' => 'flag', 'route' => 'unit.index'],
+                ['label' => 'Eventos', 'icon' => 'calendar', 'route' => 'event.index'],
+                ['label' => 'Requisitos', 'icon' => 'chart-no-axes-column', 'route' => 'requirement.index'],
+                ['label' => 'Presença (Em breve)', 'icon' => 'bookmark-check'],
+                ['label' => 'Especialidade (Em breve)', 'icon' => 'award'],
+            ],
         ],
-    ],
-    [
-        'key' => 'pontuacoes',
-        'title' => 'PONTUAÇÕES',
-        'links' => [
-            ['label' => 'Requisitos', 'icon' => 'chart-no-axes-column', 'route' => 'requirement.index'],
-            ['label' => 'Desbravador (Em breve)', 'icon' => 'calendar'],
-            ['label' => 'Unidade (Em breve)', 'icon' => 'calendar'],
+        [
+            'key' => 'pontuacoes',
+            'title' => 'PONTUAÇÕES',
+            'links' => [
+                ['label' => 'Desbravador', 'icon' => 'calendar', 'route' => 'points.pathfinder'],
+                ['label' => 'Unidade (Em breve)', 'icon' => 'calendar'],
+            ],
         ],
-    ],
-];
+    ];
 @endphp
 
 <div class="w-64 h-screen shrink-0 border-r border-border bg-card">

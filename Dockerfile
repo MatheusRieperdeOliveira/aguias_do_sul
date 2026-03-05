@@ -41,7 +41,7 @@ RUN mkdir -p /var/log/supervisor /var/run/supervisor && \
     chown -R www-data:www-data /var/log/supervisor /var/run/supervisor
 
 COPY docker/php/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
-COPY docker/supervisor/supervisor.conf /etc/supervisor/conf.d/supervisord.conf
+COPY docker/supervisor/supervisor.conf /etc/supervisor/supervisord.conf
 
 # Copy and set up the entrypoint script
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
@@ -50,4 +50,4 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 WORKDIR /var/www/app_aguiasdosul
 
 ENTRYPOINT ["entrypoint.sh"]
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
