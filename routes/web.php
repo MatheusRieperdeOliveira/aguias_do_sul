@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
-use App\Events\TestSoketi;
 
 Volt::route('/', 'pages.home.index');
 Volt::route('/home', 'pages.home.index')->name('home.index');
@@ -18,8 +17,4 @@ Volt::route('/requirements', 'pages.requirement.index')->name('requirement.index
 Route::group(["prefix" => "points"], function () {
     Volt::route('/pathfinders', 'pages.points.pathfinder')->name('points.pathfinder');
     Volt::route('/units', 'pages.points.unit')->name('points.unit');
-});
-
-Route::get('/opa', function () {
-    broadcast(new TestSoketi("opa dev"));
 });
