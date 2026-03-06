@@ -12,6 +12,7 @@ new class extends Component {
 <div class="w-full h-8 grid grid-cols-3 rounded-xl overflow-hidden text-white overflow-visible">
     <div class="group relative flex items-center justify-center bg-red-600 rounded-l-lg">
         <button
+            wire:click="$dispatch('delete-requirement', { requirementId:{{$requirement->id}}})"
             class="cursor-pointer flex items-center justify-center w-full h-full">
             <i data-lucide="trash-2" class="w-4 h-4"></i>
         </button>

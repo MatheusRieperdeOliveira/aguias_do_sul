@@ -16,6 +16,7 @@ new class extends Component {
     }
 
     #[On('requirement-created')]
+    #[On('requirement-deleted')]
     public function load(RequirementService $service)
     {
         $this->requirements = $service->geAlltRequirements();

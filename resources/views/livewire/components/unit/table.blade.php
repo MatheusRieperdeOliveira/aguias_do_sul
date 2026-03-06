@@ -13,7 +13,9 @@ new class extends Component {
         $this->load($service);
     }
 
-    #[On(['unit-created', 'unit-inactive', 'unit-active'])]
+    #[On(['unit-created'])]
+    #[On('unit-inactive')]
+    #[On('unit-active')]
     public function load(UnitService $service)
     {
         $this->units = $service->getUnits();
@@ -85,7 +87,7 @@ new class extends Component {
                 <td class="px-4 py-2">
                     <div class="w-full h-8 grid grid-cols-2 rounded-xl overflow-hidden text-white overflow-visible">
                         @if($unit->status === 'active')
-                            <div class="group relative flex items-center justify-center bg-red-600 rounded-l-lg">
+                            <div class="group relative flex items-center justify-center bg-red-400 rounded-l-lg">
                                 <button
                                     wire:click="inactivate({{$unit->id}})"
                                     class="cursor-pointer flex items-center justify-center w-full h-full">
@@ -107,7 +109,7 @@ new class extends Component {
                                 </div>
                             </div>
                         @endif
-                        <div class="group relative flex items-center justify-center bg-blue-600 rounded-r-lg">
+                        <div class="group relative flex items-center justify-center bg-blue-400 rounded-r-lg">
                             <button
                                 wire:click="$dispatch('open-unit-modal', { unitId: {{ $unit->id }} })"
                                 class="cursor-pointer flex items-center justify-center w-full h-full">

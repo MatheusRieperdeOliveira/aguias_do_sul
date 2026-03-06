@@ -1,7 +1,5 @@
 <?php
 
-use App\Models\Pathfinder;
-use App\Models\Unit;
 use Livewire\Attributes\On;
 use Livewire\Volt\Component;
 use Illuminate\Support\Str;
@@ -65,13 +63,24 @@ new class extends Component {
         $this->type = '';
         $this->open = false;
     }
+
+    #[On('delete-requirement')]
+    public function deleteRequirement($requirementId)
+    {
+        Requirement::destroy($requirementId);
+        $this->dispatch('requirement-deleted');
+    }
 }?>
 
 <div>
     @if($open)
-        <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div wire:transition
+             wire:transition.duration.200ms
+             class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
 
-            <div class="bg-white rounded-lg p-6 w-[600px]">
+            <div wire:transition
+                 wire:transition.duration.200ms
+                 class="bg-white rounded-lg p-6 w-[600px]">
 
                 <h1 class="text-3xl font-bold mb-4">
                     {{ $requirementId ? 'Editar requisitos' : 'Novo requisito' }}
@@ -143,7 +152,6 @@ new class extends Component {
                         </button>
                     </div>
                 </form>
-
             </div>
         </div>
     @endif
