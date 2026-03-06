@@ -7,7 +7,6 @@ state(['pathfinder' => fn (Pathfinder $pathfinder) => $pathfinder]);
 ?>
 
 <div class="w-full h-8 grid grid-cols-3 rounded-xl overflow-hidden text-white overflow-visible">
-    {{-- Inactivate/Activate Button --}}
     @if($pathfinder->status === 'active')
         <div class="group relative flex items-center justify-center bg-red-600 rounded-l-lg">
             <button

@@ -24,10 +24,11 @@ class extends Component {
             <p class="text-muted-foreground mt-1">Gerencie as pontuações dos desbravadores</p>
         </div>
     </div>
-    <div class="grid grid-cols-1 w-full p-8 gap-4">
+    <div class="grid grid-cols-4 w-full p-8 gap-4">
         @foreach($requirements as $requirement)
             <livewire:components.base.card :requirement="$requirement"/>
         @endforeach
     </div>
+    <livewire:components.base.scan-qrcode/>
 </div>
 
