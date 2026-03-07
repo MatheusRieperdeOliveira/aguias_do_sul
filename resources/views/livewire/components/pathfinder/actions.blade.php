@@ -6,11 +6,11 @@ state(['pathfinder' => fn (Pathfinder $pathfinder) => $pathfinder]);
 
 ?>
 
-<div class="w-full h-8 grid grid-cols-3 rounded-xl overflow-hidden text-white overflow-visible">
+<div class="w-40 h-10 grid grid-cols-3 rounded-xl overflow-hidden text-white overflow-visible">
     @if($pathfinder->status === 'active')
         <div class="group relative flex items-center justify-center bg-red-600 rounded-l-lg">
             <button
-                wire:click="$dispatch('inactivate-pathfinder', { pathfinderId: {{ $pathfinder->id }} })"
+                wire:click="$dispatch('inactivate-pathfinder', { pathfinderId: '{{ $pathfinder->id }}' })"
                 class="cursor-pointer flex items-center justify-center w-full h-full">
                 <i data-lucide="x" class="w-4 h-4"></i>
             </button>
@@ -21,7 +21,7 @@ state(['pathfinder' => fn (Pathfinder $pathfinder) => $pathfinder]);
     @else
         <div class="group relative flex items-center justify-center bg-green-600 rounded-l-lg">
             <button
-                wire:click="$dispatch('activate-pathfinder', { pathfinderId: {{ $pathfinder->id }} })"
+                wire:click="$dispatch('activate-pathfinder', { pathfinderId: '{{ $pathfinder->id }}' })"
                 class="cursor-pointer flex items-center justify-center w-full h-full">
                 <i data-lucide="check" class="w-4 h-4"></i>
             </button>

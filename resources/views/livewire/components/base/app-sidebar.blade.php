@@ -11,9 +11,9 @@
             'key' => 'gestao',
             'title' => 'GESTÃO',
             'links' => [
-                ['label' => 'Desbravadores', 'icon' => 'users', 'route' => 'pathfinder.index'],
-                ['label' => 'Unidades', 'icon' => 'flag', 'route' => 'unit.index'],
-                ['label' => 'Eventos', 'icon' => 'calendar', 'route' => 'event.index'],
+                ['label' => 'Desbravadores', 'icon' => 'flame-kindling', 'route' => 'pathfinder.index'],
+                ['label' => 'Unidades', 'icon' => 'users', 'route' => 'unit.index'],
+                ['label' => 'Eventos', 'icon' => 'calendar-1', 'route' => 'event.index'],
                 ['label' => 'Requisitos', 'icon' => 'chart-no-axes-column', 'route' => 'requirement.index'],
                 ['label' => 'Presença (Em breve)', 'icon' => 'bookmark-check'],
                 ['label' => 'Especialidade (Em breve)', 'icon' => 'award'],

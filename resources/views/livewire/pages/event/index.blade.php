@@ -13,6 +13,11 @@ class extends Component {
     public Carbon $currentDate;
     public ?string $selectedDate = null;
 
+    public string $title = 'Calendário de Eventos';
+    public string $description = 'Gerencie os eventos do clube';
+    public string $icon = 'calendar-1';
+    public string $event = 'open-event-modal';
+
     public function mount(): void
     {
         $this->currentDate = Carbon::now();
@@ -95,7 +100,6 @@ class extends Component {
     public function deleteEvent(int $eventId): void
     {
         Event::destroy($eventId);
-        // If the last event of the day is deleted, close the modal
         if ($this->selectedDayEvents()->isEmpty()) {
             $this->closeDayModal();
         }
@@ -104,25 +108,16 @@ class extends Component {
 ?>
 
 <div>
-    <!-- Include the form modal -->
+    <livewire:components.base.header-page
+        :title="$title"
+        :description="$description"
+        :icon="$icon"
+        :event="$event"
+    />
+
     <livewire:components.event.form />
 
-    <!-- Header -->
-    <div class="flex items-center justify-between w-full p-8">
-        <div>
-            <h1 class="text-3xl font-bold text-foreground">Calendário de Eventos</h1>
-            <p class="text-muted-foreground mt-1">Gerencie os eventos do clube</p>
-        </div>
-        <button wire:click="$dispatch('open-event-modal')"
-            class="cursor-pointer flex items-center bg-primary text-primary-foreground h-10 px-4 rounded-lg">
-            <i data-lucide="calendar-plus" class="mr-2 h-4 w-4"></i>
-            <span>Novo Evento</span>
-        </button>
-    </div>
-
-    <!-- Calendar -->
     <div class="p-8">
-        <!-- Calendar Controls -->
         <div class="flex items-center justify-between mb-4">
             <h2 class="text-xl font-bold">{{ $currentDate->translatedFormat('F Y') }}</h2>
             <div class="flex items-center gap-2">

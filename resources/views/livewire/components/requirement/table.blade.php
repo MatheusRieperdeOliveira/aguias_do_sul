@@ -2,24 +2,30 @@
 
 use App\Models\Pathfinder;
 use App\Services\PathfinderService;
-use Livewire\Attributes\On;
+use Livewire\Attributes\{Computed, On};
 use Livewire\Volt\Component;
 use Carbon\Carbon;
 use App\Services\RequirementService;
+use App\Models\Requirement;
 
 new class extends Component {
-    public $requirements = [];
 
-    public function mount(RequirementService $service)
+    #[Computed]
+    public function requirements()
     {
-        $this->load($service);
+        return Requirement::all();
     }
 
     #[On('requirement-created')]
-    #[On('requirement-deleted')]
-    public function load(RequirementService $service)
+    public function refresh()
     {
-        $this->requirements = $service->geAlltRequirements();
+        //
+    }
+
+    #[On('delete-requirement')]
+    public function delete($requirementId)
+    {
+        Requirement::destroy($requirementId);
     }
 
 };
@@ -49,7 +55,7 @@ new class extends Component {
         </thead>
 
         <tbody>
-        @foreach($requirements as $requirement)
+        @foreach($this->requirements as $requirement)
             <tr class="border-t border-gray-200">
                 <td class="px-4 py-2">{{$requirement->title}}</td>
                 <td class="px-4 py-2">{{$requirement->score}}</td>

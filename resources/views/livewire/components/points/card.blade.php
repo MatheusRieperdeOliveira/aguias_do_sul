@@ -11,7 +11,7 @@ class extends Component {
 
 ?>
 
-<div class="flex flex-col items-center w-full p-3 border-2 border-primary text-primary-foreground rounded-lg space-y-5">
+<div class="flex flex-col items-center w-full p-3 border-t-5 border-primary rounded-sm space-y-5">
     <div class="flex items-center justify-between w-full">
             <p class="text-black">
                 {{$requirement->title}}
@@ -22,10 +22,10 @@ class extends Component {
             </p>
         </div>
     </div>
-    <div class="flex items-center justify-end w-full">
+    <div class="grid grid-cols-1 w-full">
         <button
             wire:click="$dispatch('open-modal-scan-qrcode', { requirementId: {{$requirement->id}} })"
-            class="flex items-center gap-1 bg-primary p-2 rounded-xl cursor-pointer">
+            class="flex items-center justify-center gap-1 bg-primary p-2 rounded-xl cursor-pointer text-white">
             <i data-lucide="qr-code" class="w-5 h-5"></i>
             <p>
                 ler qrcode
