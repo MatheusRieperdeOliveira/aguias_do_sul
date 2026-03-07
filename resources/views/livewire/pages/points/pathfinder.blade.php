@@ -7,6 +7,10 @@ use App\Services\RequirementService;
 
 new #[Layout('layouts.app')]
 class extends Component {
+    public string $title = 'Pontuação';
+    public string $description = 'Gerencie as pontuações dos desbravadores';
+    public string $icon = 'smartphone-charging';
+
     public ?Collection $requirements = null;
 
     public function mount(RequirementService $service): void
@@ -18,17 +22,47 @@ class extends Component {
 ?>
 
 <div>
-    <div class="flex items-center justify-between w-full p-8">
-        <div>
-            <h1 class="text-3xl font-bold text-foreground">Pontuação</h1>
-            <p class="text-muted-foreground mt-1">Gerencie as pontuações dos desbravadores</p>
-        </div>
-    </div>
-    <div class="grid grid-cols-4 w-full p-8 gap-4">
+    <livewire:components.base.header-page
+        :title="$title"
+        :description="$description"
+        :icon="$icon"
+    />
+
+    <div class="grid grid-cols-5 w-full p-8 gap-4">
         @foreach($requirements as $requirement)
-            <livewire:components.base.card :requirement="$requirement"/>
+            <livewire:components.points.card :requirement="$requirement"/>
         @endforeach
     </div>
-    <livewire:components.base.scan-qrcode/>
+    <script src="https://unpkg.com/html5-qrcode"></script>
+
+
+    <livewire:components.points.scan-qrcode/>
 </div>
 
+<script src="https://unpkg.com/html5-qrcode"></script>
+
+
+<script>
+
+    const scanner = new Html5Qrcode("reader");
+
+    scanner.start(
+        { facingMode: "environment" },
+        { fps: 60, qrbox: 250 },
+        (decodedText) => {
+
+            fetch('/qr/send', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    code: decodedText
+                })
+            })
+
+        }
+    )
+
+</script>

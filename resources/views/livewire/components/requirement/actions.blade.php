@@ -2,10 +2,10 @@
 
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
+use App\Models\Requirement;
 
 new class extends Component {
-    #[Reactive]
-    public $requirement;
+    public Requirement $requirement;
 };
 ?>
 

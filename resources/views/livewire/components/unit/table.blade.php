@@ -1,24 +1,24 @@
 <?php
 
 use App\Models\Unit;
-use App\Services\UnitService;
-use Livewire\Attributes\On;
+use Livewire\Attributes\{Computed, On};
 use Livewire\Volt\Component;
 
 new class extends Component {
-    public $units = [];
+    public string $address = '';
 
-    public function mount(UnitService $service)
+    #[Computed]
+    public function units()
     {
-        $this->load($service);
+        return Unit::query()
+            ->when($this->address, fn($q) => $q->where('name', 'ilike', "%{$this->address}%"))
+            ->get();
     }
 
-    #[On(['unit-created'])]
-    #[On('unit-inactive')]
-    #[On('unit-active')]
-    public function load(UnitService $service)
+    #[On('unit-created')]
+    public function refresh()
     {
-        $this->units = $service->getUnits();
+        //
     }
 
     public function inactivate(string $unit_id)
@@ -26,8 +26,6 @@ new class extends Component {
         Unit::query()->where('id', $unit_id)->update([
             'status' => 'inactive'
         ]);
-
-        $this->dispatch('unit-inactive');
     }
 
     public function activate(string $unit_id)
@@ -35,8 +33,6 @@ new class extends Component {
         Unit::query()->where('id', $unit_id)->update([
             'status' => 'active'
         ]);
-
-        $this->dispatch('unit-active');
     }
 };
 ?>
@@ -44,7 +40,7 @@ new class extends Component {
 <div class="w-full overflow-x-auto rounded-lg border border-gray-200">
     <div class="w-full h-13 flex items-center justify-end px-4">
         <div class="relative">
-            <input type="text" wire:model="address" placeholder="Pesquisar"
+            <input type="text" wire:model.live="address" placeholder="Pesquisar"
                    class="h-10 rounded-lg border border-gray-300 pl-10 pr-2">
             <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none"
                  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -59,13 +55,13 @@ new class extends Component {
         <tr>
             <th class="min-w-[180px] px-4 py-2 text-left font-medium">Nome</th>
             <th class="min-w-[120px] px-4 py-2 text-left font-medium">Status</th>
-            <th class="min-w-[50px] px-4 py-2 text-left font-medium">Ações</th>
+            <th class="min-w-[120px] px-4 py-2 text-center font-medium">Ações</th>
         </tr>
         </thead>
 
         <tbody>
-        @foreach($units as $unit)
-            <tr class="border-t border-gray-200">
+        @foreach($this->units as $unit)
+            <tr class="border-t border-gray-200" wire:key="{{ $unit->id }}">
                 <td class="px-4 py-2">{{$unit->name}}</td>
                 <td class="px-4 py-2">
                     @if($unit->status === 'active')
@@ -85,9 +81,9 @@ new class extends Component {
                     @endif
                 </td>
                 <td class="px-4 py-2">
-                    <div class="w-full h-8 grid grid-cols-2 rounded-xl overflow-hidden text-white overflow-visible">
+                    <div class="w-40 h-8 grid grid-cols-2 rounded-xl overflow-hidden text-white overflow-visible">
                         @if($unit->status === 'active')
-                            <div class="group relative flex items-center justify-center bg-red-400 rounded-l-lg">
+                            <div class="bg-red-600 rounded-l-lg">
                                 <button
                                     wire:click="inactivate({{$unit->id}})"
                                     class="cursor-pointer flex items-center justify-center w-full h-full">
@@ -98,7 +94,7 @@ new class extends Component {
                                 </div>
                             </div>
                         @else
-                            <div class="group relative flex items-center justify-center bg-green-600 rounded-l-lg">
+                            <div class="bg-green-600 rounded-l-lg">
                                 <button
                                     wire:click="activate({{$unit->id}})"
                                     class="cursor-pointer flex items-center justify-center w-full h-full">
@@ -109,7 +105,7 @@ new class extends Component {
                                 </div>
                             </div>
                         @endif
-                        <div class="group relative flex items-center justify-center bg-blue-400 rounded-r-lg">
+                        <div class="group relative flex items-center justify-center bg-blue-600 rounded-r-lg">
                             <button
                                 wire:click="$dispatch('open-unit-modal', { unitId: {{ $unit->id }} })"
                                 class="cursor-pointer flex items-center justify-center w-full h-full">
