@@ -77,6 +77,7 @@ new class extends Component {
 <div>
     @if($open)
         <div wire:transition
+             wire:click.self="closeModal()"
              wire:transition.duration.200ms
              class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
 
@@ -89,7 +90,7 @@ new class extends Component {
                 </h1>
 
                 <form wire:submit="save">
-                    <div class="grid grid-cols-2 gap-3">
+                    <div class="grid grid-cols-1 gap-3">
                         <label>
                             Título
                             <input type="text" wire:model="title" placeholder="Título" class="w-full h-11 rounded-lg border border-gray-300 p-2 rounded">
@@ -102,7 +103,7 @@ new class extends Component {
 
                         <label>
                             Tipo
-                            <div class="grid grid-cols-2 gap-3">
+                            <div class="grid grid-cols-2 w-full gap-3">
                                 <div class="relative w-full mb-3">
                                     <select
                                         wire:model="type"
@@ -145,11 +146,11 @@ new class extends Component {
                         </label>
 
                     <div class="flex justify-end gap-2 mt-4">
-                        <button type="button" wire:click="closeModal" class="px-4 py-2 bg-gray-300 rounded">
+                        <button type="button" wire:click="closeModal" class="cursor-pointer px-4 py-2 bg-gray-300 rounded">
                             Cancelar
                         </button>
 
-                        <button type="submit" class="px-4 py-2 bg-primary text-white rounded">
+                        <button type="submit" class="cursor-pointer px-4 py-2 bg-primary text-white rounded">
                             Salvar
                         </button>
                     </div>

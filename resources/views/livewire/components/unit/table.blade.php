@@ -43,29 +43,30 @@ new class extends Component {
         </div>
     </div>
 
-    <table class="min-w-full table-fixed border-collapse">
-        <thead class="bg-white">
+    <table class="w-full table-fixed border-collapse">
+        <thead class="bg-gray-50 border-b border-gray-200">
         <tr>
-            <th class="min-w-[180px] px-4 py-2 text-left font-medium">Nome</th>
-            <th class="min-w-[120px] px-4 py-2 text-left font-medium">Status</th>
-            <th class="min-w-[120px] px-4 py-2 text-center font-medium">Ações</th>
+            <th class="w-1/2 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nome</th>
+            <th class="w-1/4 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+            <th class="w-1/4 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
         </tr>
         </thead>
 
-        <tbody>
+        <tbody class="bg-white divide-y divide-gray-200">
         @foreach($this->units as $unit)
-            <tr class="border-t border-gray-200" wire:key="{{ $unit->id }}">
-                <td class="px-4 py-2">{{$unit->name}}</td>
-                <td class="px-4 py-2">
-                        <div
-                            class="w-13 h-6 bg-primary rounded-md flex items-center justify-center text-white text-sm font-semibold">
-                            <p>
-                                Ativo
-                            </p>
-                        </div>
-
+            <tr class="hover:bg-gray-50" wire:key="{{ $unit->id }}">
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 truncate" title="{{$unit->name}}">
+                    {{$unit->name}}
                 </td>
-                <td class="px-4 py-2"><livewire:components.unit.actions :unit="$unit"/>
+                <td class="px-6 py-4 whitespace-nowrap text-center">
+                    <span class="inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 w-20">
+                        Ativo
+                    </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                    <div class="flex justify-center">
+                        <livewire:components.unit.actions :unit="$unit" wire:key="actions-{{ $unit->id }}"/>
+                    </div>
                 </td>
             </tr>
         @endforeach

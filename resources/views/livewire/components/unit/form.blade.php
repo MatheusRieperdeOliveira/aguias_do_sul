@@ -56,7 +56,7 @@ new class extends Component {
 <div>
     @if($open)
         <div
-             wire:click.stop='closeModal'
+            wire:click.self="closeModal"
              wire:transition
              wire:transition.duration.200ms
              class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -87,11 +87,11 @@ new class extends Component {
                     </div>
 
                     <div class="flex justify-end gap-2 mt-4">
-                        <button type="button" wire:click="closeModal" class="px-4 py-2 bg-gray-300 rounded">
+                        <button type="button" wire:click="closeModal" class="cursor-pointer px-4 py-2 bg-gray-300 rounded">
                             Cancelar
                         </button>
 
-                        <button type="submit" class="px-4 py-2 bg-primary text-white rounded">
+                        <button type="submit" class="cursor-pointer px-4 py-2 bg-primary text-white rounded">
                             Salvar
                         </button>
                     </div>

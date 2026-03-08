@@ -9,11 +9,12 @@ use App\Services\RequirementService;
 use App\Models\Requirement;
 
 new class extends Component {
+    public string $address = '';
 
     #[Computed]
     public function requirements()
     {
-        return Requirement::all();
+        return Requirement::query()->when($this->address, fn($q) => $q->where('title', 'ilike', "%{$this->address}%"))->get();
     }
 
     #[On('requirement-created')]
@@ -44,40 +45,46 @@ new class extends Component {
         </div>
     </div>
 
-    <table class="min-w-full table-fixed border-collapse">
-        <thead class="bg-white">
+    <table class="w-full table-fixed border-collapse">
+        <thead class="bg-gray-50 border-b border-gray-200">
         <tr>
-            <th class="min-w-[180px] px-4 py-2 text-left font-medium">Título</th>
-            <th class="min-w-[120px] px-4 py-2 text-left font-medium">Pontos</th>
-            <th class="min-w-[120px] px-4 py-2 text-left font-medium">Tipo</th>
-            <th class="min-w-[50px] px-4 py-2 text-left font-medium">Ações</th>
+            <th class="w-1/2 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Título</th>
+            <th class="w-1/6 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Pontos</th>
+            <th class="w-1/6 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Tipo</th>
+            <th class="w-1/6 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
         </tr>
         </thead>
 
-        <tbody>
+        <tbody class="bg-white divide-y divide-gray-200">
         @foreach($this->requirements as $requirement)
-            <tr class="border-t border-gray-200">
-                <td class="px-4 py-2">{{$requirement->title}}</td>
-                <td class="px-4 py-2">
-                    <div class="w-20 flex items-center gap-1.5 bg-gradient-to-r from-amber-400 to-amber-500 text-white px-3 py-1.5 rounded-full shadow-md">
+            <tr class="hover:bg-gray-50" wire:key="{{ $requirement->id }}">
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 truncate" title="{{$requirement->title}}">
+                    {{$requirement->title}}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap flex justify-center">
+                    <div class="flex items-center justify-center gap-1.5 bg-gradient-to-r from-amber-400 to-amber-500 text-white px-3 py-1 rounded-full shadow-sm min-w-[80px]">
                         <i data-lucide="crown" class="w-3 h-3"></i>
-                        <p>
+                        <span class="text-sm font-bold">
                             {{$requirement->score}}
-                        </p>
+                        </span>
                     </div>
                 </td>
-                <td class="px-4 py-2">
+                <td class="px-6 py-4 whitespace-nowrap text-center">
                     @if($requirement->type === "pathfinder")
-                        <div class="bg-primary w-30 h-6 text-white text-center rounded-lg">
-                            desbravador
-                        </div>
+                        <span class="inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 w-24">
+                            Desbravador
+                        </span>
                     @else
-                        <div class="bg-orange-600 w-30 h-6 text-white text-center rounded-lg">
-                            unidade
-                        </div>
+                        <span class="inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800 w-24">
+                            Unidade
+                        </span>
                     @endif
                 </td>
-                <td class="px-4 py-2"><livewire:components.requirement.actions :requirement="$requirement"/></td>
+                <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                    <div class="flex justify-center">
+                        <livewire:components.requirement.actions :requirement="$requirement" wire:key="actions-{{ $requirement->id }}"/>
+                    </div>
+                </td>
             </tr>
         @endforeach
         </tbody>

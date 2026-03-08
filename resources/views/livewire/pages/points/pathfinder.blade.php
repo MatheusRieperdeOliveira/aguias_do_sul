@@ -28,7 +28,7 @@ class extends Component {
         :icon="$icon"
     />
 
-    <div class="grid grid-cols-5 w-full p-8 gap-4">
+    <div class="grid grid-cols-3     w-full p-8 gap-4">
         @foreach($requirements as $requirement)
             <livewire:components.points.card :requirement="$requirement"/>
         @endforeach

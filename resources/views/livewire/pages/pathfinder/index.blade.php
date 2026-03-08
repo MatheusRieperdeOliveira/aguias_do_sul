@@ -11,7 +11,6 @@ class extends Component {
     public string $description = 'Gerencie os membros do clube';
     public string $icon = 'flame-kindling';
     public string $event = 'open-pathfinder-modal';
-
 };
 ?>
 
