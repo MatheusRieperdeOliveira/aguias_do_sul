@@ -5,7 +5,7 @@ use Livewire\Volt\Component;
 use Livewire\Attributes\Layout;
 use App\Services\PathfinderService;
 
-new #[Layout('layouts.app')]
+new #[Layout('livewire.layouts.app')]
 class extends Component {
     public string $title = 'Desbravadores';
     public string $description = 'Gerencie os membros do clube';

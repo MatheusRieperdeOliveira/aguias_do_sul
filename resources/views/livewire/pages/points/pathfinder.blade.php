@@ -5,7 +5,7 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 use App\Services\RequirementService;
 
-new #[Layout('layouts.app')]
+new #[Layout('livewire.layouts.app')]
 class extends Component {
     public string $title = 'Pontuação';
     public string $description = 'Gerencie as pontuações dos desbravadores';

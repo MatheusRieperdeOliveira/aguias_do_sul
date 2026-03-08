@@ -81,7 +81,7 @@ new class extends Component {
 
 <div>
     @if($open)
-        <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div wire:click.stop="closeModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
 
             <div class="bg-white rounded-lg p-6 w-[600px]">
 

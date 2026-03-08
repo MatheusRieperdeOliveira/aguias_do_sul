@@ -3,7 +3,7 @@
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
 
-new #[Layout('layouts.app')]
+new #[Layout('livewire.layouts.app')]
 class extends Component {
     public string $title = 'Unidades';
     public string $description = 'Gerencie os unidades do clube';

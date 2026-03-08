@@ -3,7 +3,7 @@
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 
-new #[Layout('layouts.app')]
+new #[Layout('livewire.layouts.app')]
 class extends Component
 {
     public string $title = 'Requisitos';

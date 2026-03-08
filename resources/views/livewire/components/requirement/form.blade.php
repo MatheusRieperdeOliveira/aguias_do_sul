@@ -52,6 +52,7 @@ new class extends Component {
             $this->score = 0;
             $this->type = '';
             $this->open = false;
+            $this->requirementId = null;
             $this->dispatch('requirement-created');
         }
     }
@@ -62,6 +63,7 @@ new class extends Component {
         $this->score = 0;
         $this->type = '';
         $this->open = false;
+        $this->requirementId = null;
     }
 
     #[On('delete-requirement')]

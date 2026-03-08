@@ -58,7 +58,14 @@ new class extends Component {
         @foreach($this->requirements as $requirement)
             <tr class="border-t border-gray-200">
                 <td class="px-4 py-2">{{$requirement->title}}</td>
-                <td class="px-4 py-2">{{$requirement->score}}</td>
+                <td class="px-4 py-2">
+                    <div class="w-20 flex items-center gap-1.5 bg-gradient-to-r from-amber-400 to-amber-500 text-white px-3 py-1.5 rounded-full shadow-md">
+                        <i data-lucide="crown" class="w-3 h-3"></i>
+                        <p>
+                            {{$requirement->score}}
+                        </p>
+                    </div>
+                </td>
                 <td class="px-4 py-2">
                     @if($requirement->type === "pathfinder")
                         <div class="bg-primary w-30 h-6 text-white text-center rounded-lg">
