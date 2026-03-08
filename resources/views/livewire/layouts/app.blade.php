@@ -11,7 +11,9 @@
     @livewireStyles
 </head>
 <body class="flex h-screen">
-@include('livewire.components.base.app-sidebar')
+@persist('sidebar')
+    <livewire:components.base.app-sidebar />
+@endpersist
 
 <main class="flex-1 overflow-auto bg-white">
     {{$slot}}

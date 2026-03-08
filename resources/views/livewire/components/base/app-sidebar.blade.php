@@ -1,34 +1,41 @@
-@php
-    $navigation = [
-        [
-            'key' => 'principal',
-            'title' => 'PRINCIPAL',
-            'links' => [
-                ['label' => 'Dashboard', 'icon' => 'compass', 'route' => 'home.index'],
+<?php
+
+use Livewire\Volt\Component;
+
+new class extends Component {
+    public array $navigation;
+
+    public function mount(): void
+    {
+        $this->navigation = [
+            [
+                'key' => 'principal',
+                'title' => 'PRINCIPAL',
+                'links' => [
+                    ['label' => 'Dashboard', 'icon' => 'compass', 'route' => 'home.index'],
+                ],
             ],
-        ],
-        [
-            'key' => 'gestao',
-            'title' => 'GESTÃO',
-            'links' => [
-                ['label' => 'Desbravadores', 'icon' => 'flame-kindling', 'route' => 'pathfinder.index'],
-                ['label' => 'Unidades', 'icon' => 'users', 'route' => 'unit.index'],
-                ['label' => 'Eventos', 'icon' => 'calendar-1', 'route' => 'event.index'],
-                ['label' => 'Requisitos', 'icon' => 'chart-no-axes-column', 'route' => 'requirement.index'],
-                ['label' => 'Presença (Em breve)', 'icon' => 'bookmark-check'],
-                ['label' => 'Especialidade (Em breve)', 'icon' => 'award'],
+            [
+                'key' => 'gestao',
+                'title' => 'GESTÃO',
+                'links' => [
+                    ['label' => 'Desbravadores', 'icon' => 'flame-kindling', 'route' => 'pathfinder.index'],
+                    ['label' => 'Unidades', 'icon' => 'users', 'route' => 'unit.index'],
+                    ['label' => 'Eventos', 'icon' => 'calendar-1', 'route' => 'event.index'],
+                    ['label' => 'Requisitos', 'icon' => 'chart-no-axes-column', 'route' => 'requirement.index'],
+                ],
             ],
-        ],
-        [
-            'key' => 'pontuacoes',
-            'title' => 'PONTUAÇÕES',
-            'links' => [
-                ['label' => 'Desbravador', 'icon' => 'calendar', 'route' => 'points.pathfinder'],
-                ['label' => 'Unidade (Em breve)', 'icon' => 'calendar'],
+            [
+                'key' => 'pontuacoes',
+                'title' => 'PONTUAÇÕES',
+                'links' => [
+                    ['label' => 'Desbravador', 'icon' => 'crown', 'route' => 'points.pathfinder'],
+                ],
             ],
-        ],
-    ];
-@endphp
+        ];
+    }
+};
+?>
 
 <div class="w-64 h-screen shrink-0 border-r border-border bg-card">
     <div class="flex h-full flex-col">
@@ -43,7 +50,7 @@
             </div>
         </div>
 
-        <nav class="flex-1 space-y-4 p-4">
+        <div class="flex-1 space-y-4 p-4">
             @foreach ($navigation as $section)
                 <livewire:components.base.nav
                     :title="$section['title']"
@@ -52,11 +59,11 @@
                     :key="$section['key']"
                 />
             @endforeach
-        </nav>
+        </div>
 
         <div class="border-t border-border p-4">
             <p class="text-xs text-muted-foreground text-center">
-                Clube de Desbravadores
+                Águias do sul
             </p>
         </div>
 

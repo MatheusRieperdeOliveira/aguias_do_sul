@@ -96,6 +96,7 @@ new class extends Component {
 
 <div>
     @if($open)
+        <div wire:click.stop="closeModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
         <div
             wire:transition
             wire:transition.duration.200ms

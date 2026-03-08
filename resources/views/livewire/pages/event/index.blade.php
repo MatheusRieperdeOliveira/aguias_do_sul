@@ -8,7 +8,7 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
 use Livewire\Volt\Component;
 
-new #[Layout('layouts.app')]
+new #[Layout('livewire.layouts.app')]
 class extends Component {
     public Carbon $currentDate;
     public ?string $selectedDate = null;
