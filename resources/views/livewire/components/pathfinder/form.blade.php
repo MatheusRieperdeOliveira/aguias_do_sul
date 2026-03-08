@@ -41,6 +41,14 @@ new class extends Component {
 
     public function closeModal()
     {
+        $this->pathfinderId = null;
+        $this->name = null;
+        $this->unit_id = null;
+        $this->email = null;
+        $this->full_phone = null;
+        $this->birthday = null;
+        $this->address = null;
+        $this->open = false;
         $this->reset();
         $this->open = false;
     }
@@ -59,15 +67,22 @@ new class extends Component {
 
         if (!$this->pathfinderId) {
             $data['status'] = 'active';
-            $data['barcode'] = Str::random(40);
         }
 
-        Pathfinder::updateOrCreate(
-            ['id' => $this->pathfinderId],
-            $data
-        );
+        $pathfinder = Pathfinder::updateOrCreate(['id' => $this->pathfinderId], $data);
 
-        $this->closeModal();
+        if ($pathfinder) {
+            $this->pathfinderId = null;
+            $this->name = null;
+            $this->unit_id = null;
+            $this->email = null;
+            $this->full_phone = null;
+            $this->birthday = null;
+            $this->address = null;
+            $this->open = false;
+
+            $this->dispatch('pathfinder-created');
+        }
     }
 
     public function with(): array
@@ -81,7 +96,10 @@ new class extends Component {
 
 <div>
     @if($open)
-        <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div
+            wire:transition
+            wire:transition.duration.200ms
+            class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
 
             <div class="bg-white rounded-lg p-6 w-[600px]">
 
@@ -91,11 +109,16 @@ new class extends Component {
 
                 <form wire:submit="save">
                     <div class="grid grid-cols-2 gap-3">
-                        <input type="text" wire:model="name" placeholder="Nome" class="w-full h-11 rounded-lg border border-gray-300 p-2 rounded">
-                        <input type="email" wire:model="email" placeholder="Email" class="w-full h-11 rounded-lg border border-gray-300 p-2 rounded">
-                        <input type="text" wire:model="full_phone" placeholder="Telefone" class="w-full h-11 rounded-lg border border-gray-300 p-2 rounded">
-                        <input type="date" wire:model="birthday" class="w-full h-11 rounded-lg border border-gray-300 p-2 rounded">
-                        <input type="text" wire:model="address" placeholder="Endereço" class="w-full h-11 rounded-lg border border-gray-300 p-2 rounded">
+                        <input type="text" wire:model="name" placeholder="Nome"
+                               class="w-full h-11 rounded-lg border border-gray-300 p-2 rounded">
+                        <input type="email" wire:model="email" placeholder="Email"
+                               class="w-full h-11 rounded-lg border border-gray-300 p-2 rounded">
+                        <input type="text" wire:model="full_phone" placeholder="Telefone"
+                               class="w-full h-11 rounded-lg border border-gray-300 p-2 rounded">
+                        <input type="date" wire:model="birthday"
+                               class="w-full h-11 rounded-lg border border-gray-300 p-2 rounded">
+                        <input type="text" wire:model="address" placeholder="Endereço"
+                               class="w-full h-11 rounded-lg border border-gray-300 p-2 rounded">
                         <div class="relative w-full mb-3">
                             <select
                                 wire:model="unit_id"

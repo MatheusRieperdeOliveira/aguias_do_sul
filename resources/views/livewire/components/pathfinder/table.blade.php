@@ -1,19 +1,17 @@
 <?php
 
 use App\Models\Pathfinder;
+use App\Services\PathfinderService;
 use Livewire\Attributes\{Computed, On};
 use Livewire\Volt\Component;
 use Carbon\Carbon;
 
 new class extends Component {
-    public string $address = '';
 
     #[Computed]
     public function pathfinders()
     {
-        return Pathfinder::query()
-            ->when($this->address, fn($q) => $q->where('name', 'ilike', "%{$this->address}%"))
-            ->get();
+        return Pathfinder::all();
     }
 
     #[On('pathfinder-created')]
@@ -22,28 +20,19 @@ new class extends Component {
         //
     }
 
-    #[On('inactivate-pathfinder')]
-    public function inactivate(string $pathfinderId)
+    #[On('delete-pathfinder')]
+    public function delete($pathfinderId)
     {
-        Pathfinder::query()->where('id', $pathfinderId)->update([
-            'status' => 'inactive'
-        ]);
+        Pathfinder::destroy($pathfinderId);
     }
 
-    #[On('activate-pathfinder')]
-    public function activate(string $pathfinderId)
-    {
-        Pathfinder::query()->where('id', $pathfinderId)->update([
-            'status' => 'active'
-        ]);
-    }
 };
 ?>
 
 <div class="w-full overflow-x-auto rounded-lg border border-gray-200">
     <div class="w-full h-13 flex items-center justify-end px-4">
         <div class="relative">
-            <input type="text" wire:model.live="address" placeholder="Pesquisar"
+            <input type="text" wire:model="address" placeholder="Pesquisar"
                    class="h-10 rounded-lg border border-gray-300 pl-10 pr-2">
             <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none"
                  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -63,6 +52,7 @@ new class extends Component {
             <th class="min-w-[140px] px-4 py-2 text-left font-medium">Aniversário</th>
             <th class="min-w-[140px] px-4 py-2 text-left font-medium">Unidade</th>
             <th class="min-w-[50px] px-4 py-2 text-left font-medium">Ações</th>
+
         </tr>
         </thead>
 
@@ -76,13 +66,6 @@ new class extends Component {
                             class="w-13 h-6 bg-primary rounded-md flex items-center justify-center text-white text-sm font-semibold">
                             <p>
                                 Ativo
-                            </p>
-                        </div>
-                    @else
-                        <div
-                            class="w-13 h-6 bg-red-500 rounded-md flex items-center justify-center text-white text-sm font-semibold">
-                            <p>
-                                Inativo
                             </p>
                         </div>
                     @endif
@@ -109,8 +92,7 @@ new class extends Component {
                 <td>
                     {{ $pathfinder->unit->name }}
                 </td>
-                <td class="px-4 py-2">
-                    <livewire:components.pathfinder.actions :pathfinder="$pathfinder" />
+                <td class="px-4 py-2"><livewire:components.pathfinder.actions :pathfinder="$pathfinder"/>
                 </td>
             </tr>
         @endforeach

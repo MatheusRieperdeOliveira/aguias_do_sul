@@ -37,6 +37,7 @@ new class extends Component {
         $unit = Unit::updateOrCreate(['id' => $this->unitId], $data);
 
         if ($unit) {
+            $this->unitId = null;
             $this->name = '';
             $this->open = false;
             $this->dispatch('unit-created');
@@ -45,22 +46,18 @@ new class extends Component {
 
     public function closeModal()
     {
+        $this->unitId = null;
         $this->name = '';
         $this->open = false;
-    }
-
-    #[On('delete-unit')]
-    public function deleteUnit($unitId)
-    {
-        Unit::destroy($unitId);
-        $this->dispatch('unit-deleted');
     }
 
 } ?>
 
 <div>
     @if($open)
-        <div wire:transition
+        <div
+             wire:click.stop='closeModal'
+             wire:transition
              wire:transition.duration.200ms
              class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
 

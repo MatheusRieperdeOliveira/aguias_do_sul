@@ -21,19 +21,12 @@ new class extends Component {
         //
     }
 
-    public function inactivate(string $unit_id)
+    #[On('unit-delete')]
+    public function delete($unitId)
     {
-        Unit::query()->where('id', $unit_id)->update([
-            'status' => 'inactive'
-        ]);
+        Unit::destroy($unitId);
     }
 
-    public function activate(string $unit_id)
-    {
-        Unit::query()->where('id', $unit_id)->update([
-            'status' => 'active'
-        ]);
-    }
 };
 ?>
 
@@ -64,58 +57,15 @@ new class extends Component {
             <tr class="border-t border-gray-200" wire:key="{{ $unit->id }}">
                 <td class="px-4 py-2">{{$unit->name}}</td>
                 <td class="px-4 py-2">
-                    @if($unit->status === 'active')
                         <div
                             class="w-13 h-6 bg-primary rounded-md flex items-center justify-center text-white text-sm font-semibold">
                             <p>
                                 Ativo
                             </p>
                         </div>
-                    @else
-                        <div
-                            class="w-13 h-6 bg-red-500 rounded-md flex items-center justify-center text-white text-sm font-semibold">
-                            <p>
-                                Inativo
-                            </p>
-                        </div>
-                    @endif
+
                 </td>
-                <td class="px-4 py-2">
-                    <div class="w-40 h-8 grid grid-cols-2 rounded-xl overflow-hidden text-white overflow-visible">
-                        @if($unit->status === 'active')
-                            <div class="bg-red-600 rounded-l-lg">
-                                <button
-                                    wire:click="inactivate({{$unit->id}})"
-                                    class="cursor-pointer flex items-center justify-center w-full h-full">
-                                    <i data-lucide="x" class="w-4 h-4"></i>
-                                </button>
-                                <div class="absolute bottom-full mb-2 hidden group-hover:block w-max px-2 py-1 bg-gray-800 text-white text-xs rounded shadow-lg z-50">
-                                    Inativar
-                                </div>
-                            </div>
-                        @else
-                            <div class="bg-green-600 rounded-l-lg">
-                                <button
-                                    wire:click="activate({{$unit->id}})"
-                                    class="cursor-pointer flex items-center justify-center w-full h-full">
-                                    <i data-lucide="check" class="w-4 h-4"></i>
-                                </button>
-                                <div class="absolute bottom-full mb-2 hidden group-hover:block w-max px-2 py-1 bg-gray-800 text-white text-xs rounded shadow-lg z-50">
-                                    Ativar
-                                </div>
-                            </div>
-                        @endif
-                        <div class="group relative flex items-center justify-center bg-blue-600 rounded-r-lg">
-                            <button
-                                wire:click="$dispatch('open-unit-modal', { unitId: {{ $unit->id }} })"
-                                class="cursor-pointer flex items-center justify-center w-full h-full">
-                                <i data-lucide="pencil" class="w-4 h-4"></i>
-                            </button>
-                            <div class="absolute bottom-full mb-2 hidden group-hover:block w-max px-2 py-1 bg-gray-800 text-white text-xs rounded shadow-lg z-50">
-                                Editar
-                            </div>
-                        </div>
-                    </div>
+                <td class="px-4 py-2"><livewire:components.unit.actions :unit="$unit"/>
                 </td>
             </tr>
         @endforeach
