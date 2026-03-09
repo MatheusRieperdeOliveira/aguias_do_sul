@@ -5,6 +5,8 @@ use Livewire\Volt\Component;
 new class extends Component {
     public array $navigation;
 
+    public bool $openSettingMenu = false;
+
     public function mount(): void
     {
         $this->navigation = [
@@ -61,10 +63,49 @@ new class extends Component {
             @endforeach
         </div>
 
-        <div class="border-t border-border p-4">
-            <p class="text-xs text-muted-foreground text-center">
-                Águias do sul
-            </p>
+        <div wire:show="openSettingMenu"
+             class="border-t border-r border-gray-300 h-auto w-full cursor-pointer">
+            <div>
+                <a href="{{ route('profile.settings') }}"
+                   class="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition hover:bg-secondary hover:text-secondary-foreground">
+                        <i data-lucide="user" class="h-4 w-4"></i>
+                        Pefil
+                    </button>
+                </a>
+            </div>
+            <div>
+                <form action="{{ route('logout') }}" method="POST" class="w-full">
+                    @csrf
+                    <button type="submit"
+                            class="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition hover:bg-secondary hover:text-secondary-foreground">
+                        <i data-lucide="log-out" class="h-4 w-4"></i>
+                        Sair
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="border border-gray-300">
+            <div class="flex items-center justify-between gap-2 min-h-20 rounded-lg px-5">
+                <div class="flex items-center gap-2">
+                    <div
+                        class="flex items-center justify-center w-10 h-10 text-center bg-blue-300 text-blue-600 rounded-full font-black">
+                        <p>
+                            {{strtoupper(auth()->user()?->name[0])}}
+                        </p>
+                        <p>
+                            {{strtoupper(auth()->user()?->name[1])}}
+                        </p>
+                    </div>
+                    <div class="text-sm font-medium text-foreground truncate">
+                        {{auth()->user()?->name}}
+                    </div>
+                </div>
+
+                <button x-on:click="$wire.openSettingMenu = !$wire.openSettingMenu" class="cursor-pointer">
+                    <i data-lucide="settings" class="h-4 w-4 text-primary"></i>
+                </button>
+            </div>
         </div>
 
     </div>

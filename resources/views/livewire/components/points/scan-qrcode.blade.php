@@ -9,7 +9,7 @@ use Carbon\Carbon;
 use App\Models\Requirement;
 
 new class extends Component {
-    public bool $open = false;
+    public bool $open = true;
     public int $requirementId = 0;
     public array $pathfinderScans = [];
 
@@ -91,7 +91,10 @@ new class extends Component {
 
                 <div class="p-6 border-t border-gray-100 bg-gray-50 mt-auto">
                     <div class="grid grid-cols-2 gap-3">
-                        <button wire:click="closeModal" class="cursor-pointer flex items-center justify-center gap-2 sm:flex-none px-5 py-2.5 text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors">
+                        <button
+                            wire:click="closeModal"
+                            wire:confirm="Deseja realmente sair? Todos os registros scaneados serão removidos"
+                            class="cursor-pointer flex items-center justify-center gap-2 sm:flex-none px-5 py-2.5 text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors">
                             <i data-lucide="x" class="w-5 h-5"></i>
                             <p>Cancelar</p>
                         </button>
