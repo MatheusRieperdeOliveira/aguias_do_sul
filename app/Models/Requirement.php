@@ -14,4 +14,9 @@ class Requirement extends Model
         'score',
         'type',
     ];
+
+    public function points(): HasMany
+    {
+        return $this->hasMany(Point::class);
+    }
 }

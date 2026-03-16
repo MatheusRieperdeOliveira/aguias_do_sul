@@ -10,7 +10,7 @@ new class extends Component {
 
 ?>
 
-<div class="w-40 h-10 grid grid-cols-3 rounded-xl overflow-hidden text-white overflow-visible">
+<div class="w-80 h-10 grid grid-cols-3 rounded-xl overflow-hidden text-white overflow-visible">
     <div class="group relative flex items-center justify-center bg-red-600 rounded-l-lg">
         <button
             wire:click="$dispatch('delete-pathfinder', { pathfinderId:{{$pathfinder->id}}})"

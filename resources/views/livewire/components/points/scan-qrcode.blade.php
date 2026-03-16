@@ -9,7 +9,7 @@ use Carbon\Carbon;
 use App\Models\Requirement;
 
 new class extends Component {
-    public bool $open = true;
+    public bool $open = false;
     public int $requirementId = 0;
     public array $pathfinderScans = [];
 
@@ -37,12 +37,20 @@ new class extends Component {
 
     public function save(): void
     {
-        dd($this->pathfinderScans);
-        $this->requirementId = 0;
-        $this->pathfinderScans = [];
+        $data = collect($this->pathfinderScans)
+            ->map(fn ($pathfinder) => [
+                'requirement_id' => $this->requirementId,
+                'pathfinder_id' => $pathfinder->id,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ])->toArray();
+
+        DB::table('points')->insert($data);
+
+        $this->closeModal();
     }
 
-    public function closeModal()
+    public function closeModal(): void
     {
         $this->requirementId = 0;
         $this->pathfinderScans = [];

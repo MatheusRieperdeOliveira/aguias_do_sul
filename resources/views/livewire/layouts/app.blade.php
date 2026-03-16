@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="{{ asset('storage/favicon.ico') }}" type="image/jpeg">
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Geist:wght@100..900&display=swap">
