@@ -60,22 +60,14 @@ new class extends Component {
     <table class="w-full table-fixed border-collapse">
         <thead class="bg-gray-50 border-b border-gray-200">
             <tr>
-                <th class="w-1/6 px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase tracking-wider">Nome
-                </th>
-                <th class="w-24 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Status
-                </th>
-                <th class="w-1/6 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Telefone</th>
-                <th class="w-1/6 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Email
-                </th>
-                <th class="w-1/6 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Aniversário</th>
-                <th class="w-1/6 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Unidade</th>
-                <th class="w-1/6 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Pontuação</th>
-                <th class="w-24 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações
-                </th>
+                <th class="w-1/6 px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase tracking-wider">Nome</th>
+                <th class="w-24 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th class="w-1/6 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Telefone</th>
+                <th class="w-1/6 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                <th class="w-1/6 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Aniversário</th>
+                <th class="w-1/6 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Unidade</th>
+                <th class="w-1/6 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Pontuação</th>
+                <th class="w-24 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
             </tr>
         </thead>
 
@@ -135,7 +127,7 @@ new class extends Component {
                             </div>
                         </div>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                    <td class="pr-1 whitespace-nowrap text-center text-sm font-medium">
                         <div class="flex justify-center">
                             <livewire:components.pathfinder.actions :pathfinder="$pathfinder"
                                 wire:key="actions-{{ $pathfinder->id }}" />

@@ -39,8 +39,8 @@ new class extends Component {
 };
 ?>
 
-<div class="w-64 h-screen shrink-0 border-r border-border bg-card">
-    <div class="flex h-full flex-col">
+<div class="w-64 h-screen border-r border-border bg-card">
+    <div class="flex h-screen flex-col">
 
         <div class="flex h-16 items-center gap-3 border-b border-border px-6">
             <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
@@ -69,8 +69,7 @@ new class extends Component {
                 <a href="{{ route('profile.settings') }}"
                    class="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition hover:bg-secondary hover:text-secondary-foreground">
                         <i data-lucide="user" class="h-4 w-4"></i>
-                        Pefil
-                    </button>
+                        Perfil
                 </a>
             </div>
             <div>

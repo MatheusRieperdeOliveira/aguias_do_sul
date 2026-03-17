@@ -5,8 +5,7 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 use App\Services\RequirementService;
 
-new #[Layout('livewire.layouts.app')]
-class extends Component {
+new #[Layout('livewire.layouts.app')] class extends Component {
     public string $title = 'Pontuação';
     public string $description = 'Gerencie as pontuações dos desbravadores';
     public string $icon = 'smartphone-charging';
@@ -17,49 +16,21 @@ class extends Component {
     {
         $this->requirements = $service->getRequirements('pathfinder');
     }
-}
+};
 
 ?>
 
 <div>
-    <livewire:components.base.header-page
-        :title="$title"
-        :description="$description"
-        :icon="$icon"
-    />
+    <livewire:components.base.header-page :title="$title" :description="$description" :icon="$icon" />
 
-    <div class="grid grid-cols-3 w-full p-8 gap-4">
-        @foreach($requirements as $requirement)
-            <livewire:components.points.card :requirement="$requirement"/>
+    <div class="p-8 pb-0">
+        <livewire:components.points.scan-qrcode />
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 p-8">
+        @foreach ($requirements as $requirement)
+            <livewire:components.points.card :requirement="$requirement" />
         @endforeach
     </div>
 
-    <livewire:components.points.scan-qrcode/>
 </div>
-
-<script src="https://unpkg.com/html5-qrcode"></script>
-
-<script>
-
-    const scanner = new Html5Qrcode("reader");
-
-    scanner.start(
-        { facingMode: "environment" },
-        { fps: 60, qrbox: 250 },
-        (decodedText) => {
-
-            fetch('/qr/send', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify({
-                    code: decodedText
-                })
-            })
-
-        }
-    )
-
-</script>
