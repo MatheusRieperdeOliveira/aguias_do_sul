@@ -1,45 +1,105 @@
 <?php
 
 use App\Models\Pathfinder;
-use App\Services\PathfinderService;
-use Livewire\Attributes\{Computed, On};
-use Livewire\Volt\Component;
+use App\Models\Point;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
+use Livewire\Attributes\On;
+use Livewire\Volt\Component;
+use Livewire\WithPagination;
 
 new class extends Component {
+    use WithPagination;
+
     public string $search = '';
+
+    public string $sortBy = 'name';
+
+    public string $sortDir = 'asc';
+
     public bool $showModal = false;
+
     public ?int $pathfinderId = null;
 
-    #[Computed]
-    public function pathfinders()
+    public function getPathfindersProperty()
     {
-        return Pathfinder::query()->when($this->search, fn($q) => $q->where('name', 'ilike', "%{$this->search}%"))->get();
+        return $this->pathfindersQuery()->paginate(15);
+    }
+
+    public function updatedSearch(): void
+    {
+        $this->resetPage();
+    }
+
+    public function sort(string $column): void
+    {
+        if (! in_array($column, ['name', 'unit', 'points'], true)) {
+            return;
+        }
+
+        if ($this->sortBy === $column) {
+            $this->sortDir = $this->sortDir === 'asc' ? 'desc' : 'asc';
+            $this->resetPage();
+
+            return;
+        }
+
+        $this->sortBy = $column;
+        $this->sortDir = $column === 'points' ? 'desc' : 'asc';
+        $this->resetPage();
     }
 
     #[On('pathfinder-created')]
-    public function refresh()
+    public function refresh(): void
     {
-        //
+        $this->resetPage();
     }
 
     #[On('delete-pathfinder')]
-    public function delete($pathfinderId)
+    public function delete($pathfinderId): void
     {
         Pathfinder::destroy($pathfinderId);
+        $this->resetPage();
     }
 
-    public function openModalHistory($pathfinderId)
+    public function openModalHistory($pathfinderId): void
     {
         $this->pathfinderId = $pathfinderId;
         $this->showModal = true;
     }
 
-    
-    public function closeModalHistory()
+    public function closeModalHistory(): void
     {
         $this->pathfinderId = null;
         $this->showModal = false;
+    }
+
+    private function pathfindersQuery(): Builder
+    {
+        $dir = $this->sortDir === 'desc' ? 'desc' : 'asc';
+
+        $query = Pathfinder::query()
+            ->with(['unit', 'points.requirement'])
+            ->when($this->search, fn ($q) => $q->where('name', 'ilike', '%'.$this->search.'%'));
+
+        if ($this->sortBy === 'unit') {
+            return $query->leftJoin('units', 'units.id', '=', 'pathfinders.unit_id')
+                ->select('pathfinders.*')
+                ->orderBy('units.name', $dir)
+                ->orderBy('pathfinders.name');
+        }
+
+        if ($this->sortBy === 'points') {
+            return $query->orderBy(
+                Point::query()
+                    ->join('requirements', 'requirements.id', '=', 'points.requirement_id')
+                    ->whereColumn('points.pathfinder_id', 'pathfinders.id')
+                    ->selectRaw('coalesce(sum(requirements.score), 0)'),
+                $dir,
+            )->orderBy('pathfinders.name');
+        }
+
+        return $query->orderBy('pathfinders.name', $dir);
     }
 };
 ?>
@@ -60,19 +120,43 @@ new class extends Component {
     <table class="w-full table-fixed border-collapse">
         <thead class="bg-gray-50 border-b border-gray-200">
             <tr>
-                <th class="w-1/6 px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase tracking-wider">Nome</th>
+                <th class="w-1/6 px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <button type="button" wire:click="sort('name')"
+                        class="inline-flex items-center gap-1 hover:text-gray-800 font-medium">
+                        Nome
+                        @if ($sortBy === 'name')
+                            <span class="text-primary">{{ $sortDir === 'asc' ? '↑' : '↓' }}</span>
+                        @endif
+                    </button>
+                </th>
                 <th class="w-24 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                 <th class="w-1/6 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Telefone</th>
                 <th class="w-1/6 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
                 <th class="w-1/6 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Aniversário</th>
-                <th class="w-1/6 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Unidade</th>
-                <th class="w-1/6 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Pontuação</th>
+                <th class="w-1/6 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <button type="button" wire:click="sort('unit')"
+                        class="inline-flex items-center justify-center gap-1 hover:text-gray-800 font-medium w-full">
+                        Unidade
+                        @if ($sortBy === 'unit')
+                            <span class="text-primary">{{ $sortDir === 'asc' ? '↑' : '↓' }}</span>
+                        @endif
+                    </button>
+                </th>
+                <th class="w-1/6 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <button type="button" wire:click="sort('points')"
+                        class="inline-flex items-center justify-center gap-1 hover:text-gray-800 font-medium w-full">
+                        Pontuação
+                        @if ($sortBy === 'points')
+                            <span class="text-primary">{{ $sortDir === 'asc' ? '↑' : '↓' }}</span>
+                        @endif
+                    </button>
+                </th>
                 <th class="w-24 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
             </tr>
         </thead>
 
         <tbody class="bg-white divide-y divide-gray-200">
-            @foreach ($this->pathfinders as $pathfinder)
+            @forelse ($this->pathfinders as $pathfinder)
                 <tr class="hover:bg-gray-50" wire:key="{{ $pathfinder->id }}">
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 truncate"
                         title="{{ $pathfinder->name }}">
@@ -92,11 +176,18 @@ new class extends Component {
                         @endif
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">
-                        {{ $pathfinder->full_phone }}
+                        @if (empty($pathfinder->full_phone))
+                            Não possui telefone
+                        @else
+                            {{ $pathfinder->full_phone }}
+                        @endif
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500 truncate"
-                        title="{{ $pathfinder->email }}">
-                        {{ $pathfinder->email }}
+                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500 truncate" title="{{ $pathfinder->email }}">
+                        @if (blank($pathfinder->email))
+                            Não possui email
+                        @else
+                            {{ $pathfinder->email }}
+                        @endif
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-center">
                         <div class="flex flex-col items-center justify-center">
@@ -117,7 +208,7 @@ new class extends Component {
                             <div class="relative group">
                                 <span
                                     class="inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 w-20">
-                                    {{ $pathfinder->points->sum(fn($point) => $point->requirement->score) }}
+                                    {{ $pathfinder->points->sum(fn ($point) => $point->requirement->score) }}
                                 </span>
 
                                 <div
@@ -134,34 +225,44 @@ new class extends Component {
                         </div>
                     </td>
                 </tr>
-            @endforeach
+            @empty
+                <tr>
+                    <td colspan="8" class="px-6 py-12 text-center text-sm text-gray-500">
+                        Nenhum desbravador encontrado.
+                    </td>
+                </tr>
+            @endforelse
         </tbody>
     </table>
 
-   @if($showModal)
-    <div 
-        wire:transition.opacity
-        class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center h-screen w-screen"
-    >
-        <div 
-            wire:transition
-            class="bg-white rounded-lg p-6 w-full h-full
+    <div class="px-4 py-3 border-t border-gray-200 bg-gray-50/50">
+        {{ $this->pathfinders->links() }}
+    </div>
+
+    @if ($showModal)
+        <div
+            wire:transition.opacity
+            class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center h-screen w-screen"
+        >
+            <div
+                wire:transition
+                class="bg-white rounded-lg p-6 w-full h-full
                    transition-all duration-300
                    data-[enter]:translate-y-full
                    data-[enter-to]:translate-y-0
                    data-[leave]:translate-y-0
                    data-[leave-to]:-translate-y-full"
-        >
-            <div class="flex justify-between items-center">
-                <h2 class="text-lg font-medium mb-4">Histórico de pontos</h2>
-                <button wire:click="closeModalHistory" class="text-gray-500 hover:text-gray-700 cursor-pointer">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-            </div>
-            <div>
-                <livewire:components.pathfinder.history :pathfinderId="$pathfinderId"/>
+            >
+                <div class="flex justify-between items-center">
+                    <h2 class="text-lg font-medium mb-4">Histórico de pontos</h2>
+                    <button wire:click="closeModalHistory" class="text-gray-500 hover:text-gray-700 cursor-pointer">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                <div>
+                    <livewire:components.pathfinder.history :pathfinderId="$pathfinderId" />
+                </div>
             </div>
         </div>
-    </div>
-@endif
+    @endif
 </div>

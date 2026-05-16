@@ -1,12 +1,8 @@
 <?php
 
 use App\Models\Pathfinder;
-use App\Models\Unit;
 use Livewire\Attributes\On;
 use Livewire\Volt\Component;
-use Illuminate\Support\Str;
-use Carbon\Carbon;
-use App\Models\Requirement;
 
 new class extends Component {
     public bool $open = false;
@@ -29,7 +25,7 @@ new class extends Component {
     {
         $this->dispatch('print-barcode', [
             'name' => $this->pathfinder->name,
-            'barcode' => DNS2D::getBarcodeSVG("$this->pathfinder->id", 'QRCODE', 5, 5)
+            'barcode' => DNS1D::getBarcodeSVG((string) $this->pathfinder->id, 'C128A', 3, 90)
         ]);
     }
 }?>
@@ -44,9 +40,12 @@ new class extends Component {
                 <div class="flex items-center justify-between mb-4">
                     <span class="text-xs font-medium px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800">Código {{ $pathfinder->name }}</span>
                 </div>
-                <div class="flex items-center justify-center w-full">
-                    {!! DNS2D::getBarcodeSVG("$pathfinder->id", 'QRCODE', 14, 14) !!}
+                <div class="flex items-center justify-center w-full overflow-x-auto py-2">
+                    {!! DNS1D::getBarcodeSVG((string) $pathfinder->id, 'C128A', 2, 72) !!}
                 </div>
+                <p class="text-center text-sm font-mono font-semibold text-slate-600 tracking-widest mt-2">
+                    {{ $pathfinder->id }}
+                </p>
                 <div class="mt-8 flex items-center justify-end gap-3">
                     <button wire:click="closeModal" class="cursor-pointer flex-1 sm:flex-none px-5 py-2.5 text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors">
                         Cancelar
@@ -106,8 +105,9 @@ new class extends Component {
                             }
                             svg {
                                 display: block;
-                                width: 300px;
-                                height: 300px;
+                                width: auto;
+                                height: auto;
+                                max-width: 100%;
                             }
                             @media print {
                                 body { min-height: auto; }

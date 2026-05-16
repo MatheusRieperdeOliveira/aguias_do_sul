@@ -2,15 +2,20 @@
 
 use App\Models\Event;
 use Carbon\Carbon;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
 use Livewire\Volt\Component;
+use Livewire\WithPagination;
 
 new #[Layout('livewire.layouts.app')]
 class extends Component {
+    use WithPagination;
+
     public Carbon $currentDate;
+
     public ?string $selectedDate = null;
 
     public string $title = 'Calendário de Eventos';
@@ -48,29 +53,36 @@ class extends Component {
         return $days;
     }
 
-    #[Computed]
-    public function selectedDayEvents(): Collection
+    public function getSelectedDayEventsProperty(): LengthAwarePaginator
     {
-        if (!$this->selectedDate) {
-            return collect();
+        if (! $this->selectedDate) {
+            return new LengthAwarePaginator([], 0, 10, 1, [
+                'path' => request()->url(),
+                'pageName' => 'events',
+            ]);
         }
-        return Event::whereDate('starts_at', $this->selectedDate)->orderBy('starts_at')->get();
+
+        return Event::whereDate('starts_at', $this->selectedDate)
+            ->orderBy('starts_at')
+            ->paginate(10, ['*'], 'events');
     }
 
     #[On('event-saved')]
     public function refresh(): void
     {
-        // Re-renders the component
+        $this->resetPage('events');
     }
 
     public function openDayModal(string $date): void
     {
         $this->selectedDate = $date;
+        $this->resetPage('events');
     }
 
     public function closeDayModal(): void
     {
         $this->selectedDate = null;
+        $this->resetPage('events');
     }
 
     public function goToPreviousMonth(): void
@@ -100,9 +112,18 @@ class extends Component {
     public function deleteEvent(int $eventId): void
     {
         Event::destroy($eventId);
-        if ($this->selectedDayEvents()->isEmpty()) {
-            $this->closeDayModal();
+
+        if (! $this->selectedDate) {
+            return;
         }
+
+        if (Event::whereDate('starts_at', $this->selectedDate)->count() === 0) {
+            $this->closeDayModal();
+
+            return;
+        }
+
+        $this->resetPage('events');
     }
 };
 ?>
@@ -214,6 +235,10 @@ class extends Component {
                     @empty
                         <p class="text-gray-500">Nenhum evento para este dia.</p>
                     @endforelse
+                </div>
+
+                <div class="mt-4 border-t border-gray-100 pt-3">
+                    {{ $this->selectedDayEvents->links() }}
                 </div>
             </div>
         </div>

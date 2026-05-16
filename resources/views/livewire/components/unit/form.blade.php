@@ -1,69 +1,83 @@
 <?php
 
+use App\Models\Unit;
+use Illuminate\Validation\Rule;
 use Livewire\Attributes\On;
 use Livewire\Volt\Component;
-use Illuminate\Support\Str;
-use Carbon\Carbon;
-use App\Models\Unit;
 
 new class extends Component {
     public bool $open = false;
+
     public ?int $unitId = null;
 
     public string $name = '';
 
     #[On('open-unit-modal')]
-    public function openModal($unitId = null)
+    public function openModal($unitId = null): void
     {
-        if ($unitId) {
-            $this->unitId = $unitId;
-            $unit = Unit::find($unitId);
-            $this->name = $unit->name;
-        }
+        $this->reset(['name', 'unitId']);
         $this->open = true;
-    }
 
-    public function save()
-    {
-        if ($this->name === '') {
-            $this->open = false;
-        }
+        if ($unitId) {
+            $this->unitId = (int) $unitId;
+            $unit = Unit::find($this->unitId);
 
-        $data = [
-            'name' => $this->name,
-            'status' => 'active',
-        ];
-
-        $unit = Unit::updateOrCreate(['id' => $this->unitId], $data);
-
-        if ($unit) {
-            $this->unitId = null;
-            $this->name = '';
-            $this->open = false;
-            $this->dispatch('unit-created');
+            if ($unit) {
+                $this->name = $unit->name;
+            }
         }
     }
 
-    public function closeModal()
+    public function save(): void
     {
-        $this->unitId = null;
-        $this->name = '';
+        $validated = $this->validate(
+            [
+                'name' => [
+                    'required',
+                    'string',
+                    'min:2',
+                    'max:255',
+                    Rule::unique('units', 'name')->ignore($this->unitId),
+                ],
+            ],
+            [
+                'name.required' => 'Informe o nome da unidade.',
+                'name.min' => 'O nome deve ter pelo menos 2 caracteres.',
+                'name.unique' => 'Já existe uma unidade com este nome.',
+            ],
+        );
+
+        Unit::updateOrCreate(
+            ['id' => $this->unitId],
+            [
+                'name' => $validated['name'],
+                'status' => 'active',
+            ],
+        );
+
+        $this->reset(['name', 'unitId']);
+        $this->open = false;
+        $this->dispatch('unit-created');
+    }
+
+    public function closeModal(): void
+    {
+        $this->reset(['name', 'unitId']);
         $this->open = false;
     }
-
-} ?>
+};
+?>
 
 <div>
-    @if($open)
-        <div
-            wire:click.self="closeModal"
-             wire:transition
-             wire:transition.duration.200ms
-             class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    @if ($open)
+        <div wire:click.self="closeModal"
+            wire:transition
+            wire:transition.duration.200ms
+            class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
 
             <div wire:transition
-                 wire:transition.duration.200ms
-                 class="bg-white rounded-lg p-6 w-[600px]">
+                wire:transition.duration.200ms
+                class="bg-white rounded-lg p-6 w-[600px]">
 
                 <h1 class="text-3xl font-bold mb-4">
                     {{ $unitId ? 'Editar Unidades' : 'Nova Unidade' }}
@@ -71,18 +85,13 @@ new class extends Component {
 
                 <form wire:submit="save">
                     <div class="grid grid-cols-1 gap-3">
-                        <label>
-                            Nome
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Nome</label>
                             <input type="text" wire:model="name" placeholder="Nome"
-                                   class="w-full h-11 rounded-lg border border-gray-300 p-2 rounded">
-                        </label>
-                        <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-400">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20"
-                                 fill="currentColor">
-                                <path fill-rule="evenodd"
-                                      d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.25a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z"
-                                      clip-rule="evenodd"/>
-                            </svg>
+                                class="w-full h-11 rounded-lg border border-gray-300 p-2 @error('name') border-red-500 @enderror">
+                            @error('name')
+                                <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
                     </div>
 

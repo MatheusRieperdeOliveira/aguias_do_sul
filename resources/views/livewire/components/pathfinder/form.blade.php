@@ -4,85 +4,95 @@ use App\Models\Pathfinder;
 use App\Models\Unit;
 use Livewire\Attributes\On;
 use Livewire\Volt\Component;
-use Illuminate\Support\Str;
 use Carbon\Carbon;
 
 new class extends Component {
     public ?int $pathfinderId = null;
-    public $name = '';
+    public string $name = '';
     public ?int $unit_id = null;
-    public $email = '';
-    public $full_phone = '';
-    public $birthday = '';
-    public $address = '';
+    public string $email = '';
+    public string $full_phone = '';
+    public string $birthday = '';
+    public string $address = '';
 
     public bool $open = false;
 
     #[On('open-pathfinder-modal')]
-    public function openModal($pathfinderId = null)
+    public function openModal(int|string|null $pathfinderId = null): void
     {
         $this->reset();
         $this->open = true;
 
-        if ($pathfinderId) {
-            $this->pathfinderId = $pathfinderId;
-            $pathfinder = Pathfinder::find($pathfinderId);
-
-            if ($pathfinder) {
-                $this->name = $pathfinder->name;
-                $this->unit_id = $pathfinder->unit_id;
-                $this->email = $pathfinder->email;
-                $this->full_phone = $pathfinder->full_phone;
-                $this->birthday = $pathfinder->birthday;
-                $this->address = $pathfinder->address;
-            }
+        if ($pathfinderId === null || $pathfinderId === '') {
+            return;
         }
+
+        $pathfinder = Pathfinder::find((int) $pathfinderId);
+
+        if (!$pathfinder) {
+            return;
+        }
+
+        $this->pathfinderId = $pathfinder->id;
+        $this->name = (string) $pathfinder->name;
+        $this->unit_id = $pathfinder->unit_id;
+        $this->email = (string) ($pathfinder->email ?? '');
+        $this->full_phone = (string) ($pathfinder->full_phone ?? '');
+        $this->birthday = $pathfinder->birthday
+            ? Carbon::parse($pathfinder->birthday)->format('Y-m-d')
+            : '';
+        $this->address = (string) ($pathfinder->address ?? '');
     }
 
-    public function closeModal()
+    public function closeModal(): void
     {
-        $this->pathfinderId = null;
-        $this->name = null;
-        $this->unit_id = null;
-        $this->email = null;
-        $this->full_phone = null;
-        $this->birthday = null;
-        $this->address = null;
-        $this->open = false;
         $this->reset();
-        $this->open = false;
     }
 
-    public function save()
+    public function save(): void
     {
+        $validated = $this->validate(
+            [
+                'name' => ['required', 'string', 'min:2', 'max:255'],
+                'unit_id' => ['required', 'exists:units,id'],
+                'email' => ['nullable', 'email', 'max:255'],
+                'full_phone' => ['nullable', 'string', 'max:40'],
+                'birthday' => ['required', 'date', 'before_or_equal:today', 'after:1900-01-01'],
+                'address' => ['nullable', 'string', 'max:500'],
+            ],
+            [
+                'name.required' => 'Informe o nome.',
+                'name.min' => 'O nome deve ter pelo menos 2 caracteres.',
+                'unit_id.required' => 'Selecione a unidade.',
+                'unit_id.exists' => 'Unidade inválida.',
+                'email.email' => 'Informe um e-mail válido.',
+                'birthday.required' => 'Informe a data de nascimento.',
+                'birthday.before_or_equal' => 'A data de nascimento não pode ser futura.',
+                'birthday.after' => 'Data de nascimento inválida.',
+            ],
+        );
+
         $data = [
-            'name' => $this->name,
-            'email' => $this->email,
-            'age' => Carbon::parse($this->birthday)->age,
-            'full_phone' => $this->full_phone,
-            'birthday' => $this->birthday,
-            'address' => $this->address,
-            'unit_id' => $this->unit_id,
+            'name' => $validated['name'],
+            'email' => ($validated['email'] ?? '') === '' ? null : $validated['email'],
+            'age' => Carbon::parse($validated['birthday'])->age,
+            'full_phone' => ($validated['full_phone'] ?? '') === '' ? null : $validated['full_phone'],
+            'birthday' => $validated['birthday'],
+            'address' => ($validated['address'] ?? '') === '' ? null : $validated['address'],
+            'unit_id' => $validated['unit_id'],
         ];
 
-        if (!$this->pathfinderId) {
+        if (! $this->pathfinderId) {
             $data['status'] = 'active';
         }
 
-        $pathfinder = Pathfinder::updateOrCreate(['id' => $this->pathfinderId], $data);
+        Pathfinder::updateOrCreate(
+            ['id' => $this->pathfinderId],
+            $data,
+        );
 
-        if ($pathfinder) {
-            $this->pathfinderId = null;
-            $this->name = null;
-            $this->unit_id = null;
-            $this->email = null;
-            $this->full_phone = null;
-            $this->birthday = null;
-            $this->address = null;
-            $this->open = false;
-
-            $this->dispatch('pathfinder-created');
-        }
+        $this->reset();
+        $this->dispatch('pathfinder-created');
     }
 
     public function with(): array
@@ -95,15 +105,19 @@ new class extends Component {
 ?>
 
 <div>
-    @if($open)
+    @if ($open)
         <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
             <div
                 wire:transition
                 wire:transition.duration.200ms
                 wire:click.self="closeModal"
-                class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-
-                <div class="bg-white rounded-lg p-6 w-[600px]">
+                class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+            >
+                <div
+                    wire:key="pathfinder-form-{{ $pathfinderId ?? 'new' }}"
+                    class="bg-white rounded-lg p-6 w-[600px]"
+                    @click.stop
+                >
 
                     <h1 class="text-3xl font-bold mb-4">
                         {{ $pathfinderId ? 'Editar desbravador' : 'Novo desbravador' }}
@@ -111,16 +125,41 @@ new class extends Component {
 
                     <form wire:submit="save">
                         <div class="grid grid-cols-2 gap-3">
-                            <input type="text" wire:model="name" placeholder="Nome"
-                                   class="w-full h-11 rounded-lg border border-gray-300 p-2 rounded">
-                            <input type="email" wire:model="email" placeholder="Email"
-                                   class="w-full h-11 rounded-lg border border-gray-300 p-2 rounded">
-                            <input type="text" wire:model="full_phone" placeholder="Telefone"
-                                   class="w-full h-11 rounded-lg border border-gray-300 p-2 rounded">
-                            <input type="date" wire:model="birthday"
-                                   class="w-full h-11 rounded-lg border border-gray-300 p-2 rounded">
-                            <input type="text" wire:model="address" placeholder="Endereço"
-                                   class="w-full h-11 rounded-lg border border-gray-300 p-2 rounded">
+                            <div>
+                                <input type="text" wire:model="name" placeholder="Nome"
+                                    class="w-full h-11 rounded-lg border border-gray-300 p-2 rounded @error('name') border-red-500 @enderror">
+                                @error('name')
+                                    <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div>
+                                <input type="email" wire:model="email" placeholder="Email (opcional)"
+                                    class="w-full h-11 rounded-lg border border-gray-300 p-2 rounded @error('email') border-red-500 @enderror">
+                                @error('email')
+                                    <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div>
+                                <input type="text" wire:model="full_phone" placeholder="Telefone (opcional)"
+                                    class="w-full h-11 rounded-lg border border-gray-300 p-2 rounded @error('full_phone') border-red-500 @enderror">
+                                @error('full_phone')
+                                    <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div>
+                                <input type="date" wire:model="birthday"
+                                    class="w-full h-11 rounded-lg border border-gray-300 p-2 rounded @error('birthday') border-red-500 @enderror">
+                                @error('birthday')
+                                    <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div>
+                                <input type="text" wire:model="address" placeholder="Endereço (opcional)"
+                                    class="w-full h-11 rounded-lg border border-gray-300 p-2 rounded @error('address') border-red-500 @enderror">
+                                @error('address')
+                                    <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
                             <div class="relative w-full mb-3">
                                 <select
                                     wire:model="unit_id"
@@ -142,6 +181,7 @@ new class extends Component {
             hover:border-gray-400
             cursor-pointer
             font-[GeistMono]
+            @error('unit_id') border-red-500 @enderror
         "
                                 >
                                     <option value="" class="text-gray-400">Selecione a unidade</option>
@@ -162,6 +202,9 @@ new class extends Component {
                                               clip-rule="evenodd"/>
                                     </svg>
                                 </div>
+                                @error('unit_id')
+                                    <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
 
@@ -176,9 +219,8 @@ new class extends Component {
                             </button>
                         </div>
                     </form>
-
                 </div>
             </div>
-            @endif
         </div>
+    @endif
 </div>

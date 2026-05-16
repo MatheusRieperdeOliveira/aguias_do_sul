@@ -10,6 +10,8 @@ class Point extends Model
     protected $fillable = [
         'requirement_id',
         'pathfinder_id',
+        'recorded_by_user_id',
+        'recorded_from_ip',
     ];
 
     public function requirement(): BelongsTo
@@ -22,4 +24,8 @@ class Point extends Model
         return $this->belongsTo(Pathfinder::class);
     }
 
+    public function recordedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'recorded_by_user_id');
+    }
 }

@@ -1,71 +1,84 @@
 <?php
 
 use App\Models\Event;
-use Livewire\Attributes\On;
-use Livewire\Attributes\Rule;
-use Livewire\Volt\Component;
 use Carbon\Carbon;
+use Livewire\Attributes\On;
+use Livewire\Volt\Component;
 
 new class extends Component {
     public bool $open = false;
+
     public ?int $eventId = null;
 
-    #[Rule('required|string|max:255')]
     public string $title = '';
 
-    #[Rule('nullable|string')]
     public string $description = '';
 
-    #[Rule('required|date')]
     public string $starts_at_date = '';
 
-    #[Rule('nullable|date_format:H:i')]
     public string $starts_at_time = '';
 
-    #[Rule('nullable|string|max:255')]
     public string $location = '';
 
     #[On('open-event-modal')]
-    public function openModal($eventId = null)
+    public function openModal($eventId = null): void
     {
         $this->reset();
         $this->open = true;
 
         if ($eventId) {
-            $this->eventId = $eventId;
-            $event = Event::find($eventId);
+            $this->eventId = (int) $eventId;
+            $event = Event::find($this->eventId);
+
             if ($event) {
                 $this->title = $event->title;
-                $this->description = $event->description;
+                $this->description = (string) ($event->description ?? '');
                 $this->starts_at_date = $event->starts_at->format('Y-m-d');
                 $this->starts_at_time = $event->starts_at->format('H:i');
-                $this->location = $event->location;
+                $this->location = (string) ($event->location ?? '');
             }
         } else {
             $this->starts_at_date = now()->format('Y-m-d');
+            $this->starts_at_time = '';
         }
     }
 
-    public function closeModal()
+    public function closeModal(): void
     {
         $this->open = false;
         $this->reset();
     }
 
-    public function save()
+    public function save(): void
     {
-        $this->validate();
+        $validated = $this->validate(
+            [
+                'title' => ['required', 'string', 'min:2', 'max:255'],
+                'description' => ['nullable', 'string', 'max:10000'],
+                'starts_at_date' => ['required', 'date'],
+                'starts_at_time' => ['nullable', 'date_format:H:i'],
+                'location' => ['nullable', 'string', 'max:255'],
+            ],
+            [
+                'title.required' => 'Informe o título do evento.',
+                'title.min' => 'O título deve ter pelo menos 2 caracteres.',
+                'starts_at_date.required' => 'Informe a data.',
+                'starts_at_date.date' => 'Data inválida.',
+                'starts_at_time.date_format' => 'Hora inválida (use HH:MM).',
+            ],
+        );
 
-        $starts_at = Carbon::parse($this->starts_at_date . ' ' . $this->starts_at_time);
+        $time = ($validated['starts_at_time'] ?? '') !== '' ? $validated['starts_at_time'] : '00:00';
+        $starts_at = Carbon::parse($validated['starts_at_date'].' '.$time);
 
         Event::updateOrCreate(
             ['id' => $this->eventId],
             [
-                'title' => $this->title,
-                'description' => $this->description,
+                'title' => $validated['title'],
+                'description' => ($validated['description'] ?? '') === '' ? null : $validated['description'],
                 'starts_at' => $starts_at,
-                'location' => $this->location,
-            ]
+                'location' => ($validated['location'] ?? '') === '' ? null : $validated['location'],
+            ],
         );
 
         $this->dispatch('event-saved');
@@ -86,32 +99,42 @@ new class extends Component {
                     <div class="space-y-4">
                         <div>
                             <input type="text" wire:model="title" placeholder="Título do Evento"
-                                class="w-full h-11 rounded-lg border border-gray-300 p-2">
-                            @error('title') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                                class="w-full h-11 rounded-lg border border-gray-300 p-2 @error('title') border-red-500 @enderror">
+                            @error('title')
+                                <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
                             <div>
                                 <input type="date" wire:model="starts_at_date"
-                                    class="w-full h-11 rounded-lg border border-gray-300 p-2">
-                                @error('starts_at_date') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                                    class="w-full h-11 rounded-lg border border-gray-300 p-2 @error('starts_at_date') border-red-500 @enderror">
+                                @error('starts_at_date')
+                                    <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                                @enderror
                             </div>
                             <div>
                                 <input type="time" wire:model="starts_at_time"
-                                    class="w-full h-11 rounded-lg border border-gray-300 p-2">
-                                @error('starts_at_time') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                                    class="w-full h-11 rounded-lg border border-gray-300 p-2 @error('starts_at_time') border-red-500 @enderror">
+                                @error('starts_at_time')
+                                    <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                                @enderror
                             </div>
-                             <div>
-                                <input type="text" wire:model="location" placeholder="Local"
-                                    class="w-full h-11 rounded-lg border border-gray-300 p-2">
-                                @error('location') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                            <div>
+                                <input type="text" wire:model="location" placeholder="Local (opcional)"
+                                    class="w-full h-11 rounded-lg border border-gray-300 p-2 @error('location') border-red-500 @enderror">
+                                @error('location')
+                                    <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
 
                         <div>
                             <textarea wire:model="description" placeholder="Descrição (opcional)"
-                                class="w-full h-24 rounded-lg border border-gray-300 p-2"></textarea>
-                            @error('description') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                                class="w-full h-24 rounded-lg border border-gray-300 p-2 @error('description') border-red-500 @enderror"></textarea>
+                            @error('description')
+                                <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
                     </div>
 

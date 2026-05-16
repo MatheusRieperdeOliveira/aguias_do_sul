@@ -1,5 +1,6 @@
-<?php 
+<?php
 
+use Livewire\Attributes\Computed;
 use Livewire\Component;
 use App\Models\Pathfinder;
 
@@ -9,7 +10,9 @@ new class extends Component {
     #[Computed]
     public function pathfinder()
     {
-        return Pathfinder::query()->with(['points', 'points.requirement'])->find($this->pathfinderId);
+        return Pathfinder::query()
+            ->with(['points.requirement', 'points.recordedBy'])
+            ->find($this->pathfinderId);
     }
 };
 
@@ -22,6 +25,7 @@ new class extends Component {
                 <tr>
                     <th class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase tracking-wider">Conquista / Requisito</th>
                     <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Pontos</th>
+                    <th class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase tracking-wider">Registrado por</th>
                     <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Data e Hora</th>
                 </tr>
             </thead>
@@ -39,6 +43,16 @@ new class extends Component {
                                 +{{ $point->requirement->score }}
                             </span>
                         </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            @if ($point->recordedBy)
+                                <div class="flex flex-col max-w-[14rem]">
+                                    <span class="text-sm font-medium text-gray-900 truncate">{{ $point->recordedBy->name }}</span>
+                                    <span class="text-xs text-gray-500 truncate">{{ $point->recordedBy->email }}</span>
+                                </div>
+                            @else
+                                <span class="text-sm text-gray-400">—</span>
+                            @endif
+                        </td>
                         <td class="px-6 py-4 whitespace-nowrap text-right">
                             <div class="flex flex-col">
                                 <span class="text-sm text-gray-900 font-medium">{{ $point->created_at->translatedFormat('d/m/Y') }}</span>
@@ -48,7 +62,7 @@ new class extends Component {
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="3" class="px-6 py-12 text-center">
+                        <td colspan="4" class="px-6 py-12 text-center">
                             <div class="flex flex-col items-center">
                                 <svg class="h-10 w-10 text-gray-300 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -59,7 +73,20 @@ new class extends Component {
                     </tr>
                 @endforelse
             </tbody>
+            <tfoot class="bg-gray-50 border-t-2 border-gray-200">
+                <tr>
+                    <td class="px-6 py-4 text-sm font-bold text-gray-700">Total de pontos</td>
+                    <td class="px-6 py-4 text-center">
+                        <span
+                            class="inline-flex items-center justify-center min-w-[4.5rem] px-3 py-1 rounded-full text-sm font-bold bg-primary/10 text-primary border border-primary/20"
+                        >
+                            {{ $this->pathfinder()->points->sum(fn ($point) => (int) $point->requirement->score) }}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4"></td>
+                    <td class="px-6 py-4"></td>
+                </tr>
+            </tfoot>
         </table>
     @endif
 </div>
-
