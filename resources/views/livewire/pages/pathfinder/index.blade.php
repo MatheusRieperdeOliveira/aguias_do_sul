@@ -3,7 +3,6 @@
 use Livewire\Attributes\On;
 use Livewire\Volt\Component;
 use Livewire\Attributes\Layout;
-use App\Services\PathfinderService;
 
 new #[Layout('livewire.layouts.app')]
 class extends Component {
@@ -22,9 +21,11 @@ class extends Component {
         :event="$event"
     />
 
-    <div class="flex flex-col items-center justify-between w-full p-8 gap-4">
-        <livewire:components.pathfinder.form/>
-        <livewire:components.pathfinder.barcode/>
-        <livewire:components.pathfinder.table/>
+    <div  class="p-4">
+        <div>
+            <livewire:components.pathfinder.form/>
+            <livewire:components.pathfinder.barcode/>
+            <livewire:components.pathfinder.table/>
+        </div>
     </div>
 </div>

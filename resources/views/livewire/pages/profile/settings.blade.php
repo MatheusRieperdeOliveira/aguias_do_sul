@@ -76,8 +76,8 @@ class extends Component {
         :icon="$icon"
     />
 
-    <div class="p-8 space-y-8">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div class="p-4 md:p-8 space-y-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             <div class="md:col-span-1">
                 <h2 class="text-lg font-medium text-foreground">Informações do Perfil</h2>
                 <p class="mt-1 text-sm text-muted-foreground">
@@ -126,7 +126,7 @@ class extends Component {
 
         <div class="border-t border-border"></div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             <div class="md:col-span-1">
                 <h2 class="text-lg font-medium text-foreground">Atualizar Senha</h2>
                 <p class="mt-1 text-sm text-muted-foreground">

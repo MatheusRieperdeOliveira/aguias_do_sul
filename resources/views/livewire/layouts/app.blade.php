@@ -14,12 +14,6 @@
 <body class="flex flex-col md:flex-row h-screen overflow-hidden bg-background" x-data="{ sidebarOpen: false }">
 
 <header class="flex shrink-0 h-16 items-center justify-between border-b border-border bg-card px-4 md:hidden">
-    <div class="flex items-center gap-2">
-        <div class="flex h-8 w-8 items-center justify-center rounded bg-primary">
-            <i data-lucide="compass" class="h-5 w-5 text-primary-foreground"></i>
-        </div>
-        <span class="font-semibold text-foreground">Águias do Sul</span>
-    </div>
     <button @click="sidebarOpen = true" class="p-2 text-foreground">
         <i data-lucide="menu" class="h-6 w-6"></i>
     </button>
@@ -38,13 +32,13 @@
 </div>
 
 <div :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
-     class="fixed inset-y-0 left-0 transform transition duration-300 ease-in-out md:static md:translate-x-0 shrink-0">
+     class="fixed inset-y-0 left-0 transform transition duration-300 ease-in-out md:static md:translate-x-0 shrink-0 z-40 ">
     @persist('sidebar')
         <livewire:components.base.app-sidebar />
     @endpersist
 </div>
 
-<main class="flex-1 overflow-auto bg-white">
+<main class="flex-1 min-w-0 overflow-auto bg-white">
     {{$slot}}
 </main>
 

@@ -23,11 +23,11 @@ new #[Layout('livewire.layouts.app')] class extends Component {
 <div>
     <livewire:components.base.header-page :title="$title" :description="$description" :icon="$icon" />
 
-    <div class="p-8 pb-0">
+    <div class="p-4 md:p-8 pb-0">
         <livewire:components.points.scan-qrcode />
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 p-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4 md:p-8">
         @foreach ($requirements as $requirement)
             <livewire:components.points.card :requirement="$requirement" />
         @endforeach

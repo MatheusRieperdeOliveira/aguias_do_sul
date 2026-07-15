@@ -18,7 +18,6 @@ new class extends Component {
     #[On('unit-created')]
     public function refresh()
     {
-        //
     }
 
     #[On('unit-delete')]
@@ -26,16 +25,15 @@ new class extends Component {
     {
         Unit::destroy($unitId);
     }
-
 };
 ?>
 
-<div class="w-full overflow-x-auto rounded-lg border border-gray-200">
-    <div class="w-full h-13 flex items-center justify-end px-4">
-        <div class="relative">
+<div class="w-full space-y-4">
+    <div class="flex justify-end">
+        <div class="relative w-full sm:w-72">
             <input type="text" wire:model.live="address" placeholder="Pesquisar"
-                   class="h-10 rounded-lg border border-gray-300 pl-10 pr-2">
-            <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none"
+                   class="w-full h-10 rounded-lg border border-gray-300 pl-10 pr-3">
+            <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
                  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1110.5 3a7.5 7.5 0 016.15 13.65z"/>
@@ -43,33 +41,52 @@ new class extends Component {
         </div>
     </div>
 
-    <table class="w-full table-fixed border-collapse">
-        <thead class="bg-gray-50 border-b border-gray-200">
-        <tr>
-            <th class="w-1/2 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nome</th>
-            <th class="w-1/4 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-            <th class="w-1/4 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
-        </tr>
-        </thead>
+    <div class="md:hidden space-y-3">
+        @forelse($this->units as $unit)
+            <div class="rounded-lg border border-gray-200 bg-white p-4 space-y-3" wire:key="mobile-{{ $unit->id }}">
+                <div class="flex items-start justify-between gap-3">
+                    <p class="font-semibold text-gray-900 min-w-0 flex-1 truncate">{{ $unit->name }}</p>
+                    <span class="shrink-0 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Ativo</span>
+                </div>
+                <div class="w-28 ml-auto">
+                    <livewire:components.unit.actions :unit="$unit" wire:key="actions-mobile-{{ $unit->id }}"/>
+                </div>
+            </div>
+        @empty
+            <div class="rounded-lg border border-gray-200 bg-white p-6 text-center text-sm text-gray-500">
+                Nenhuma unidade encontrada
+            </div>
+        @endforelse
+    </div>
 
-        <tbody class="bg-white divide-y divide-gray-200">
-        @foreach($this->units as $unit)
-            <tr class="hover:bg-gray-50" wire:key="{{ $unit->id }}">
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 truncate" title="{{$unit->name}}">
-                    {{$unit->name}}
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-center">
-                    <span class="inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 w-20">
-                        Ativo
-                    </span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                    <div class="flex justify-center">
-                        <livewire:components.unit.actions :unit="$unit" wire:key="actions-{{ $unit->id }}"/>
-                    </div>
-                </td>
+    <div class="hidden md:block overflow-x-auto rounded-lg border border-gray-200">
+        <table class="w-full table-fixed border-collapse">
+            <thead class="bg-gray-50 border-b border-gray-200">
+            <tr>
+                <th class="w-1/2 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nome</th>
+                <th class="w-1/4 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th class="w-1/4 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
             </tr>
-        @endforeach
-        </tbody>
-    </table>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+            @foreach($this->units as $unit)
+                <tr class="hover:bg-gray-50" wire:key="desktop-{{ $unit->id }}">
+                    <td class="px-6 py-4 text-sm font-medium text-gray-900 truncate" title="{{$unit->name}}">
+                        {{$unit->name}}
+                    </td>
+                    <td class="px-6 py-4 text-center">
+                        <span class="inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 w-20">Ativo</span>
+                    </td>
+                    <td class="px-6 py-4 text-center text-sm font-medium">
+                        <div class="flex justify-center">
+                            <div class="w-28">
+                                <livewire:components.unit.actions :unit="$unit" wire:key="actions-desktop-{{ $unit->id }}"/>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
+    </div>
 </div>

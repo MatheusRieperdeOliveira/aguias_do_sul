@@ -39,16 +39,15 @@ new class extends Component {
 };
 ?>
 
-<div class="w-64 h-screen border-r border-border bg-card">
+<div class="w-64 h-screen border-r border-border bg-card z-40">
     <div class="flex h-screen flex-col">
 
         <div class="flex h-16 items-center gap-3 border-b border-border px-6">
-            <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
-                <i data-lucide="compass" class="h-6 w-6 text-primary-foreground"></i>
+            <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-transparent">
+                <img src="/icon.jpg" class="h-10 w-10" >
             </div>
             <div>
-                <h1 class="text-lg font-semibold text-foreground">Desbravadores</h1>
-                <p class="text-xs text-muted-foreground">Aguias do sul</p>
+                Águias do Sul 
             </div>
         </div>
 

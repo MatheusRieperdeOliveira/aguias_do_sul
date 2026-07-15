@@ -59,13 +59,13 @@ new class extends Component {
             wire:click.self="closeModal"
              wire:transition
              wire:transition.duration.200ms
-             class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+             class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
 
             <div wire:transition
                  wire:transition.duration.200ms
-                 class="bg-white rounded-lg p-6 w-[600px]">
+                 class="bg-white rounded-lg p-4 md:p-6 w-full max-w-xl max-h-[90vh] overflow-y-auto">
 
-                <h1 class="text-3xl font-bold mb-4">
+                <h1 class="text-2xl md:text-3xl font-bold mb-4">
                     {{ $unitId ? 'Editar Unidades' : 'Nova Unidade' }}
                 </h1>
 

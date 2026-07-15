@@ -76,9 +76,9 @@ new class extends Component {
 
 <div>
     @if ($open)
-        <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-            <div class="w-full max-w-2xl rounded-lg bg-white p-6" @click.away="$wire.closeModal()">
-                <h1 class="mb-4 text-3xl font-bold">
+        <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+            <div class="w-full max-w-2xl rounded-lg bg-white p-4 md:p-6 max-h-[90vh] overflow-y-auto" @click.away="$wire.closeModal()">
+                <h1 class="mb-4 text-2xl md:text-3xl font-bold">
                     {{ $eventId ? 'Editar Evento' : 'Novo Evento' }}
                 </h1>
 

@@ -38,63 +38,90 @@ class extends Component
     }
 }; ?>
 
-<div class="w-full max-w-sm space-y-8 rounded-2xl border border-[var(--border)] bg-[var(--card)] p-8 shadow-lg">
-    <div class="flex flex-col items-center gap-2">
-        <div class="flex h-14 w-14 items-center justify-center rounded-xl bg-[var(--primary)]">
-            <i data-lucide="compass" class="h-8 w-8 text-[var(--primary-foreground)]"></i>
-        </div>
-        <h1 class="text-xl font-semibold text-[var(--foreground)]">Águias do Sul</h1>
-        <p class="text-sm text-[var(--muted-foreground)]">Entre na sua conta</p>
+<div class="relative flex items-center justify-center w-full h-screen overflow-hidden">
+
+    <div
+        class="absolute inset-0 bg-cover bg-center bg-no-repeat blur-xs scale-110"
+        style="
+            background-image: url('/icon.jpg');
+            opacity: .18;
+        "
+    ></div>
+
+    <div class="absolute inset-0 bg-white/10"></div>
+
+    <div class="relative z-10 w-full max-w-md">
+        <form wire:submit="login" class="space-y-5 rounded-2xl bg-white/70 backdrop-blur-md p-8 shadow-2xl">
+
+            <div>
+                <label
+                    for="email"
+                    class="mb-1.5 block text-sm font-medium text-[var(--foreground)]"
+                >
+                    E-mail
+                </label>
+
+                <input
+                    wire:model="email"
+                    id="email"
+                    type="email"
+                    autocomplete="email"
+                    autofocus
+                    class="w-full rounded-lg border border-[var(--input)] bg-white/90 px-3 py-2 shadow-sm"
+                    placeholder="seu@email.com"
+                />
+
+                @error('email')
+                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div>
+                <label
+                    for="password"
+                    class="mb-1.5 block text-sm font-medium text-[var(--foreground)]"
+                >
+                    Senha
+                </label>
+
+                <input
+                    wire:model="password"
+                    id="password"
+                    type="password"
+                    autocomplete="current-password"
+                    class="w-full rounded-lg border border-[var(--input)] bg-white/90 px-3 py-2 shadow-sm"
+                    placeholder="••••••••"
+                />
+
+                @error('password')
+                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div class="flex items-center">
+                <input
+                    wire:model="remember"
+                    id="remember"
+                    type="checkbox"
+                    class="h-4 w-4"
+                />
+
+                <label
+                    for="remember"
+                    class="ml-2 text-sm text-gray-700"
+                >
+                    Lembrar de mim
+                </label>
+            </div>
+
+            <button
+                type="submit"
+                class="w-full rounded-lg bg-zinc-800 py-3 text-white transition hover:bg-zinc-700"
+            >
+                Entrar
+            </button>
+
+        </form>
     </div>
 
-    <form wire:submit="login" class="space-y-5">
-        <div>
-            <label for="email" class="mb-1.5 block text-sm font-medium text-[var(--foreground)]">E-mail</label>
-            <input
-                wire:model="email"
-                id="email"
-                type="email"
-                autocomplete="email"
-                autofocus
-                class="w-full rounded-lg border border-[var(--input)] bg-[var(--background)] px-3 py-2 text-[var(--foreground)] shadow-sm transition focus:border-[var(--ring)] focus:outline-none focus:ring-2 focus:ring-[var(--ring)]"
-                placeholder="seu@email.com"
-            />
-            @error('email')
-                <p class="mt-1 text-sm text-[var(--destructive)]">{{ $message }}</p>
-            @enderror
-        </div>
-
-        <div>
-            <label for="password" class="mb-1.5 block text-sm font-medium text-[var(--foreground)]">Senha</label>
-            <input
-                wire:model="password"
-                id="password"
-                type="password"
-                autocomplete="current-password"
-                class="w-full rounded-lg border border-input bg-background px-3 py-2 text-foreground shadow-sm transition focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring"
-                placeholder="••••••••"
-            />
-
-            @error('password')
-                <p class="mt-1 text-sm text-destructive">{{ $message }}</p>
-            @enderror
-        </div>
-
-        <div class="flex items-center">
-            <input
-                wire:model="remember"
-                id="remember"
-                type="checkbox"
-                class="h-4 w-4 rounded border-input text-primary focus:ring-ring"
-            />
-            <label for="remember" class="ml-2 text-sm text-muted-foreground">Lembrar de mim</label>
-        </div>
-
-        <button
-            type="submit"
-            class="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground shadow transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[var(--ring)] focus:ring-offset-2 cursor-pointer"
-        >
-            Entrar
-        </button>
-    </form>
 </div>

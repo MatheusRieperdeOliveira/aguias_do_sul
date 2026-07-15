@@ -96,21 +96,21 @@ new class extends Component {
 
 <div>
     @if($open)
-        <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
             <div
                 wire:transition
                 wire:transition.duration.200ms
                 wire:click.self="closeModal"
-                class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
 
-                <div class="bg-white rounded-lg p-6 w-[600px]">
+                <div class="bg-white rounded-lg p-4 md:p-6 w-full max-w-xl max-h-[90vh] overflow-y-auto">
 
-                    <h1 class="text-3xl font-bold mb-4">
+                    <h1 class="text-2xl md:text-3xl font-bold mb-4">
                         {{ $pathfinderId ? 'Editar desbravador' : 'Novo desbravador' }}
                     </h1>
 
                     <form wire:submit="save">
-                        <div class="grid grid-cols-2 gap-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <input type="text" wire:model="name" placeholder="Nome"
                                    class="w-full h-11 rounded-lg border border-gray-300 p-2 rounded">
                             <input type="email" wire:model="email" placeholder="Email"

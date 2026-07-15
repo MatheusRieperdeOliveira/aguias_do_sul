@@ -20,7 +20,7 @@ class extends Component {
         :event="$event"
     />
 
-    <div class="flex flex-col items-center justify-between w-full p-8 gap-4">
+    <div class="w-full p-4 md:p-8">
         <livewire:components.unit.form />
         <livewire:components.unit.table />
     </div>

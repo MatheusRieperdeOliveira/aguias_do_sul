@@ -117,10 +117,10 @@ class extends Component {
 
     <livewire:components.event.form />
 
-    <div class="p-8">
-        <div class="flex items-center justify-between mb-4">
-            <h2 class="text-xl font-bold">{{ $currentDate->translatedFormat('F Y') }}</h2>
-            <div class="flex items-center gap-2">
+    <div class="p-4 md:p-8">
+        <div class="flex items-center justify-between gap-2 mb-4">
+            <h2 class="text-lg md:text-xl font-bold capitalize">{{ $currentDate->translatedFormat('F Y') }}</h2>
+            <div class="flex items-center gap-1 md:gap-2 shrink-0">
                 <button wire:click="goToPreviousMonth" class="p-2 rounded-md hover:bg-gray-200">
                     <i data-lucide="chevron-left" class="w-5 h-5"></i>
                 </button>
@@ -132,32 +132,55 @@ class extends Component {
         </div>
 
         <div class="grid grid-cols-7 border-l border-gray-200">
-            @foreach (['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'] as $day)
-                <div class="text-center text-sm font-medium text-gray-500 py-2 border-b border-gray-200">{{ $day }}</div>
+            @foreach ([
+                ['Dom', 'Domingo'],
+                ['Seg', 'Segunda'],
+                ['Ter', 'Terça'],
+                ['Qua', 'Quarta'],
+                ['Qui', 'Quinta'],
+                ['Sex', 'Sexta'],
+                ['Sáb', 'Sábado'],
+            ] as [$short, $full])
+                <div class="text-center text-xs md:text-sm font-medium text-gray-500 py-2 border-b border-gray-200">
+                    <span class="md:hidden">{{ $short }}</span>
+                    <span class="hidden md:inline">{{ $full }}</span>
+                </div>
             @endforeach
 
             @foreach ($this->days as $day)
                 <div @class([
-                    'relative h-36 border-b border-r border-gray-200 p-2 flex flex-col transition-colors cursor-pointer',
+                    'relative h-16 sm:h-24 md:h-36 border-b border-r border-gray-200 p-1 md:p-2 flex flex-col transition-colors cursor-pointer',
                     'bg-gray-50 text-gray-400' => !$day['is_current_month'],
                     'bg-white hover:bg-gray-50' => $day['is_current_month'],
                 ]) @if($day['is_current_month']) wire:click="openDayModal('{{ $day['date']->toDateString() }}')" @endif>
                     <span @class([
+                        'text-xs md:text-sm',
                         'font-semibold' => $day['date']->isToday(),
                         'text-primary' => $day['date']->isToday(),
-                        'bg-primary w-10 text-center text-white rounded-full' => $day['date']->isToday(),
+                        'bg-primary w-6 md:w-10 text-center text-white rounded-full' => $day['date']->isToday(),
                     ])>{{ $day['date']->day }}</span>
 
                     <div class="mt-1 flex-1 overflow-hidden space-y-1">
                         @foreach ($day['events'] as $event)
                             <div @class([
-                                'flex items-center rounded px-1 text-xs text-white',
+                                'hidden sm:flex items-center rounded px-1 text-xs text-white',
                                 'bg-blue-500' => $event->status === 'pending',
                                 'bg-green-500' => $event->status === 'completed',
                             ])>
                                 <p class="flex-1 truncate">{{ $event->title }}</p>
                             </div>
                         @endforeach
+                        @if($day['events']->isNotEmpty())
+                            <div class="sm:hidden flex gap-0.5 flex-wrap mt-0.5">
+                                @foreach ($day['events']->take(3) as $event)
+                                    <span @class([
+                                        'w-1.5 h-1.5 rounded-full',
+                                        'bg-blue-500' => $event->status === 'pending',
+                                        'bg-green-500' => $event->status === 'completed',
+                                    ])></span>
+                                @endforeach
+                            </div>
+                        @endif
                     </div>
                 </div>
             @endforeach
@@ -165,37 +188,39 @@ class extends Component {
     </div>
 
     @if ($selectedDate)
-        <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60" x-data="{ open: @entangle('selectedDate') }" x-show="open" x-on:keydown.escape.window="open = null">
-            <div class="w-full max-w-lg rounded-lg bg-white p-6" @click.away="open = null">
-                <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-2xl font-bold">{{ \Carbon\Carbon::parse($selectedDate)->translatedFormat('l, d \d\e F') }}</h2>
-                    <button wire:click="closeDayModal" class="p-2 rounded-full hover:bg-gray-200">
+        <div class="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 p-0 sm:p-4" x-data="{ open: @entangle('selectedDate') }" x-show="open" x-on:keydown.escape.window="open = null">
+            <div class="w-full max-w-lg rounded-t-2xl sm:rounded-lg bg-white p-4 md:p-6 max-h-[90vh] overflow-y-auto" @click.away="open = null">
+                <div class="flex items-start justify-between gap-3 mb-4">
+                    <h2 class="text-lg md:text-2xl font-bold">{{ \Carbon\Carbon::parse($selectedDate)->translatedFormat('l, d \d\e F') }}</h2>
+                    <button wire:click="closeDayModal" class="p-2 rounded-full hover:bg-gray-200 shrink-0">
                         <i data-lucide="x" class="w-5 h-5 cursor-pointer"></i>
                     </button>
                 </div>
 
                 <div class="space-y-4 max-h-[60vh] overflow-y-auto">
                     @forelse ($this->selectedDayEvents as $event)
-                        <div class="p-4 border rounded-lg flex items-start gap-4">
-                            <span @class([
-                                'w-3 h-3 rounded-full mt-1.5 shrink-0',
-                                'bg-blue-500' => $event->status === 'pending',
-                                'bg-green-500' => $event->status === 'completed',
-                            ])></span>
-                            <div class="flex-1">
-                                <p class="font-bold text-gray-800">{{ $event->title }}</p>
-                                <p class="text-sm text-gray-600">
-                                    <i data-lucide="clock" class="inline w-3 h-3"></i> {{ $event->starts_at->format('H:i') }}
-                                    @if($event->location)
-                                        <span class="mx-2">|</span>
-                                        <i data-lucide="map-pin" class="inline w-3 h-3"></i> {{ $event->location }}
+                        <div class="p-3 md:p-4 border rounded-lg flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-4">
+                            <div class="flex items-start gap-3 flex-1 min-w-0">
+                                <span @class([
+                                    'w-3 h-3 rounded-full mt-1.5 shrink-0',
+                                    'bg-blue-500' => $event->status === 'pending',
+                                    'bg-green-500' => $event->status === 'completed',
+                                ])></span>
+                                <div class="flex-1 min-w-0">
+                                    <p class="font-bold text-gray-800">{{ $event->title }}</p>
+                                    <p class="text-sm text-gray-600">
+                                        <i data-lucide="clock" class="inline w-3 h-3"></i> {{ $event->starts_at->format('H:i') }}
+                                        @if($event->location)
+                                            <span class="mx-2">|</span>
+                                            <i data-lucide="map-pin" class="inline w-3 h-3"></i> {{ $event->location }}
+                                        @endif
+                                    </p>
+                                    @if($event->description)
+                                        <p class="mt-2 text-sm text-gray-700">{{ $event->description }}</p>
                                     @endif
-                                </p>
-                                @if($event->description)
-                                    <p class="mt-2 text-sm text-gray-700">{{ $event->description }}</p>
-                                @endif
+                                </div>
                             </div>
-                            <div class="flex items-center gap-1">
+                            <div class="flex items-center gap-1 self-end sm:self-start">
                                 <button wire:click="toggleStatus({{ $event->id }})" class="p-2 hover:bg-gray-200 rounded-full" title="Mudar Status">
                                     @if($event->status === 'pending')
                                         <i data-lucide="check-circle-2" class="w-5 h-5 text-green-600"></i>
