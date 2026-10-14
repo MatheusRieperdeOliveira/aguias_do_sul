@@ -56,7 +56,9 @@ new class extends Component {
     {
         $this->validate();
 
-        $starts_at = Carbon::parse($this->starts_at_date . ' ' . $this->starts_at_time);
+        $starts_at = Carbon::parse(
+            $this->starts_at_date . ' ' . $this->starts_at_time,
+        );
 
         Event::updateOrCreate(
             ['id' => $this->eventId],
@@ -65,7 +67,7 @@ new class extends Component {
                 'description' => $this->description,
                 'starts_at' => $starts_at,
                 'location' => $this->location,
-            ]
+            ],
         );
 
         $this->dispatch('event-saved');
@@ -76,50 +78,108 @@ new class extends Component {
 
 <div>
     @if ($open)
-        <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-            <div class="w-full max-w-2xl rounded-lg bg-white p-4 md:p-6 max-h-[90vh] overflow-y-auto" @click.away="$wire.closeModal()">
+        <div
+            class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+        >
+            <div
+                class="w-full max-w-2xl rounded-lg bg-white p-4 md:p-6 max-h-[90vh] overflow-y-auto"
+                @click.away="$wire.closeModal()"
+            >
                 <h1 class="mb-4 text-2xl md:text-3xl font-bold">
-                    {{ $eventId ? 'Editar Evento' : 'Novo Evento' }}
+                    {{
+                        $eventId
+                            ? 'Editar Evento'
+                            : 'Novo Evento'
+                    }}
                 </h1>
 
                 <form wire:submit="save">
                     <div class="space-y-4">
                         <div>
-                            <input type="text" wire:model="title" placeholder="Título do Evento"
-                                class="w-full h-11 rounded-lg border border-gray-300 p-2">
-                            @error('title') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                            <input
+                                type="text"
+                                wire:model="title"
+                                placeholder="Título do Evento"
+                                class="w-full h-11 rounded-lg border border-gray-300 p-2"
+                            />
+                            @error ('title')
+                                <span
+                                    class="text-red-500 text-sm"
+                                    >{{ $message }}</span
+                                >
+                            @enderror
                         </div>
 
                         <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
                             <div>
-                                <input type="date" wire:model="starts_at_date"
-                                    class="w-full h-11 rounded-lg border border-gray-300 p-2">
-                                @error('starts_at_date') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                                <input
+                                    type="date"
+                                    wire:model="starts_at_date"
+                                    class="w-full h-11 rounded-lg border border-gray-300 p-2"
+                                />
+                                @error ('starts_at_date')
+                                    <span
+                                        class="text-red-500 text-sm"
+                                        >{{ $message }}</span
+                                    >
+                                @enderror
                             </div>
                             <div>
-                                <input type="time" wire:model="starts_at_time"
-                                    class="w-full h-11 rounded-lg border border-gray-300 p-2">
-                                @error('starts_at_time') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                                <input
+                                    type="time"
+                                    wire:model="starts_at_time"
+                                    class="w-full h-11 rounded-lg border border-gray-300 p-2"
+                                />
+                                @error ('starts_at_time')
+                                    <span
+                                        class="text-red-500 text-sm"
+                                        >{{ $message }}</span
+                                    >
+                                @enderror
                             </div>
-                             <div>
-                                <input type="text" wire:model="location" placeholder="Local"
-                                    class="w-full h-11 rounded-lg border border-gray-300 p-2">
-                                @error('location') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                            <div>
+                                <input
+                                    type="text"
+                                    wire:model="location"
+                                    placeholder="Local"
+                                    class="w-full h-11 rounded-lg border border-gray-300 p-2"
+                                />
+                                @error ('location')
+                                    <span
+                                        class="text-red-500 text-sm"
+                                        >{{ $message }}</span
+                                    >
+                                @enderror
                             </div>
                         </div>
 
                         <div>
-                            <textarea wire:model="description" placeholder="Descrição (opcional)"
-                                class="w-full h-24 rounded-lg border border-gray-300 p-2"></textarea>
-                            @error('description') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                            <textarea
+                                wire:model="description"
+                                placeholder="Descrição (opcional)"
+                                class="w-full h-24 rounded-lg border border-gray-300 p-2"
+                            ></textarea>
+                            @error ('description')
+                                <span
+                                    class="text-red-500 text-sm"
+                                    >{{ $message }}</span
+                                >
+                            @enderror
                         </div>
                     </div>
 
                     <div class="mt-4 flex justify-end gap-2">
-                        <button type="button" wire:click="closeModal" class="rounded bg-gray-300 px-4 py-2">
+                        <button
+                            type="button"
+                            wire:click="closeModal"
+                            class="rounded bg-gray-300 px-4 py-2"
+                        >
                             Cancelar
                         </button>
-                        <button type="submit" class="rounded bg-primary px-4 py-2 text-white">
+                        <button
+                            type="submit"
+                            class="rounded bg-primary px-4 py-2 text-white"
+                        >
                             Salvar
                         </button>
                     </div>

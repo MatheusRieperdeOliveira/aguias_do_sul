@@ -3,9 +3,7 @@
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 
-new #[Layout('livewire.layouts.app')]
-class extends Component
-{
+new #[Layout('livewire.layouts.app')] class extends Component {
     public string $title = 'Requisitos';
     public string $description = 'Gerencie os requisitos do clube';
     public string $icon = 'chart-no-axes-column';
@@ -22,7 +20,7 @@ class extends Component
     />
 
     <div class="w-full p-4 md:p-8">
-        <livewire:components.requirement.form/>
-        <livewire:components.requirement.table/>
+        <livewire:components.requirement.form />
+        <livewire:components.requirement.table />
     </div>
 </div>

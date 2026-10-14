@@ -4,8 +4,7 @@ use Livewire\Attributes\On;
 use Livewire\Volt\Component;
 use Livewire\Attributes\Layout;
 
-new #[Layout('livewire.layouts.app')]
-class extends Component {
+new #[Layout('livewire.layouts.app')] class extends Component {
     public string $title = 'Desbravadores';
     public string $description = 'Gerencie os membros do clube';
     public string $icon = 'flame-kindling';
@@ -21,11 +20,11 @@ class extends Component {
         :event="$event"
     />
 
-    <div  class="p-4">
+    <div class="p-4">
         <div>
-            <livewire:components.pathfinder.form/>
-            <livewire:components.pathfinder.barcode/>
-            <livewire:components.pathfinder.table/>
+            <livewire:components.pathfinder.form />
+            <livewire:components.pathfinder.barcode />
+            <livewire:components.pathfinder.table />
         </div>
     </div>
 </div>

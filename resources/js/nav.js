@@ -3,11 +3,11 @@ document.addEventListener('alpine:init', () => {
         items: Alpine.$persist({
             principal: true,
             gestao: true,
-            pontuacoes: true
+            pontuacoes: true,
         }).as('navbar_sections'),
 
         toggle(section) {
-            this.items[section] = !this.items[section]
-        }
-    })
-})
+            this.items[section] = !this.items[section];
+        },
+    });
+});

@@ -5,9 +5,7 @@ use Livewire\Attributes\Layout;
 use App\Exports\PointExport;
 use Maatwebsite\Excel\Facades\Excel;
 
-new #[Layout('livewire.layouts.app')]
-class extends Component
-{
+new #[Layout('livewire.layouts.app')] class extends Component {
     public string $title = 'Dashboard';
     public string $description = 'Visão geral do clube de desbravadores';
     public string $icon = 'layout-dashboard';
@@ -18,12 +16,14 @@ class extends Component
 
     public function export()
     {
-        return Excel::download(new PointExport, 'relatorio_pontos.xlsx');
+        return Excel::download(new PointExport(), 'relatorio_pontos.xlsx');
     }
 }; ?>
 
 <div>
-    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+    <div
+        class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between"
+    >
         <div class="min-w-0 flex-1">
             <livewire:components.base.header-page
                 :title="$title"
@@ -43,17 +43,57 @@ class extends Component
         </div>
     </div>
 
-    <div class="px-4 md:px-8 pb-4 md:pb-8">
-        <div class="bg-card border border-border/40 rounded-3xl p-6 md:p-8 min-h-[300px] flex flex-col items-center justify-center text-center space-y-4">
-            <div class="bg-muted p-4 rounded-full">
-                <i data-lucide="code-xml" class="w-12 h-12 text-muted-foreground/50"></i>
-            </div>
-            <div>
-                <h4 class="text-xl font-semibold">Em breve</h4>
-                <p class="text-muted-foreground max-w-sm mx-auto">
-                    Acompanhe os pontos de cada desbravador por aqui.
-                </p>
-            </div>
+    <div class="px-4 pb-6 md:px-8 md:pb-8">
+        <div
+            x-data="{ cards: cards }"
+            class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3"
+        >
+            <template x-for="(card, index) in cards" :key="index">
+                <div
+                    class="group flex flex-col justify-between gap-6 rounded-2xl border border-border/60 bg-card p-5 transition-all duration-300 md:p-6"
+                >
+                    <div class="space-y-3">
+                        <div class="space-y-1">
+                            <h3
+                                x-text="card.title"
+                                class="text-xl font-semibold tracking-tight text-foreground"
+                            ></h3>
+
+                            <p class="text-sm leading-relaxed text-muted-foreground">Acesse a página de <span x-text="card.title.toLowerCase()"></span>.</p>
+                        </div>
+                    </div>
+
+                    <a
+                        wire:navigate
+                        :href="card.link"
+                        class="inline-flex w-fit items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-all duration-200 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2"
+                    >
+                        Acessar página
+
+                        <i
+                            data-lucide="arrow-right"
+                            class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1"
+                        ></i>
+                    </a>
+                </div>
+            </template>
         </div>
     </div>
 </div>
+
+<script>
+    const cards = [
+        {
+            title: 'Desbravadores',
+            link: 'pathfinder',
+        },
+        {
+            title: 'Unidades',
+            link: 'unit',
+        },
+        {
+            title: 'Requisitos',
+            link: 'requirements',
+        },
+    ];
+</script>

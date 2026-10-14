@@ -27,5 +27,9 @@ chown -R aguias:aguias /var/www/app_aguiasdosul /var/log/supervisor /var/run/sup
 
 echo "Permissions fixed."
 
+echo "Creating directories logs nginx..."
+mkdir -p /var/www/app_aguiasdosul/storage/logs/nginx
+touch /var/www/app_aguiasdosul/storage/logs/nginx/error.log
+
 # Execute the main command specified in the docker-compose.yml
 exec "$@"

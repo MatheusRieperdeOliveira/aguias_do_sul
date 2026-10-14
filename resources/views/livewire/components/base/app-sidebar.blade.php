@@ -14,24 +14,48 @@ new class extends Component {
                 'key' => 'principal',
                 'title' => 'PRINCIPAL',
                 'links' => [
-                    ['label' => 'Dashboard', 'icon' => 'compass', 'route' => 'home.index'],
+                    [
+                        'label' => 'Dashboard',
+                        'icon' => 'compass',
+                        'route' => 'home.index',
+                    ],
                 ],
             ],
             [
                 'key' => 'gestao',
                 'title' => 'GESTÃO',
                 'links' => [
-                    ['label' => 'Desbravadores', 'icon' => 'flame-kindling', 'route' => 'pathfinder.index'],
-                    ['label' => 'Unidades', 'icon' => 'users', 'route' => 'unit.index'],
-                    ['label' => 'Eventos', 'icon' => 'calendar-1', 'route' => 'event.index'],
-                    ['label' => 'Requisitos', 'icon' => 'chart-no-axes-column', 'route' => 'requirement.index'],
+                    [
+                        'label' => 'Desbravadores',
+                        'icon' => 'flame-kindling',
+                        'route' => 'pathfinder.index',
+                    ],
+                    [
+                        'label' => 'Unidades',
+                        'icon' => 'users',
+                        'route' => 'unit.index',
+                    ],
+                    [
+                        'label' => 'Eventos',
+                        'icon' => 'calendar-1',
+                        'route' => 'event.index',
+                    ],
+                    [
+                        'label' => 'Requisitos',
+                        'icon' => 'chart-no-axes-column',
+                        'route' => 'requirement.index',
+                    ],
                 ],
             ],
             [
                 'key' => 'pontuacoes',
                 'title' => 'PONTUAÇÕES',
                 'links' => [
-                    ['label' => 'Desbravador', 'icon' => 'crown', 'route' => 'points.pathfinder'],
+                    [
+                        'label' => 'Desbravador',
+                        'icon' => 'crown',
+                        'route' => 'points.pathfinder',
+                    ],
                 ],
             ],
         ];
@@ -41,14 +65,13 @@ new class extends Component {
 
 <div class="w-64 h-screen border-r border-border bg-card z-40">
     <div class="flex h-screen flex-col">
-
         <div class="flex h-16 items-center gap-3 border-b border-border px-6">
-            <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-transparent">
-                <img src="/icon.jpg" class="h-10 w-10" >
+            <div
+                class="flex h-10 w-10 items-center justify-center rounded-lg bg-transparent"
+            >
+                <img src="/icon.jpg" class="h-10 w-10" />
             </div>
-            <div>
-                Águias do Sul 
-            </div>
+            <div>Águias do Sul</div>
         </div>
 
         <div class="flex-1 space-y-4 p-4">
@@ -62,20 +85,30 @@ new class extends Component {
             @endforeach
         </div>
 
-        <div wire:show="openSettingMenu"
-             class="border-t border-r border-gray-300 h-auto w-full cursor-pointer">
+        <div
+            wire:show="openSettingMenu"
+            class="border-t border-r border-gray-300 h-auto w-full cursor-pointer"
+        >
             <div>
-                <a href="{{ route('profile.settings') }}"
-                   class="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition hover:bg-secondary hover:text-secondary-foreground">
-                        <i data-lucide="user" class="h-4 w-4"></i>
-                        Perfil
+                <a
+                    href="{{ route('profile.settings') }}"
+                    class="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition hover:bg-secondary hover:text-secondary-foreground"
+                >
+                    <i data-lucide="user" class="h-4 w-4"></i>
+                    Perfil
                 </a>
             </div>
             <div>
-                <form action="{{ route('logout') }}" method="POST" class="w-full">
+                <form
+                    action="{{ route('logout') }}"
+                    method="POST"
+                    class="w-full"
+                >
                     @csrf
-                    <button type="submit"
-                            class="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition hover:bg-secondary hover:text-secondary-foreground">
+                    <button
+                        type="submit"
+                        class="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition hover:bg-secondary hover:text-secondary-foreground"
+                    >
                         <i data-lucide="log-out" class="h-4 w-4"></i>
                         Sair
                     </button>
@@ -84,27 +117,39 @@ new class extends Component {
         </div>
 
         <div class="border border-gray-300">
-            <div class="flex items-center justify-between gap-2 min-h-20 rounded-lg px-5">
+            <div
+                class="flex items-center justify-between gap-2 min-h-20 rounded-lg px-5"
+            >
                 <div class="flex items-center gap-2">
                     <div
-                        class="flex items-center justify-center w-10 h-10 text-center bg-blue-300 text-blue-600 rounded-full font-black">
-                        <p>
-                            {{strtoupper(auth()->user()?->name[0])}}
-                        </p>
-                        <p>
-                            {{strtoupper(auth()->user()?->name[1])}}
-                        </p>
+                        class="flex items-center justify-center w-10 h-10 text-center bg-blue-300 text-blue-600 rounded-full font-black"
+                    >
+                        <p>{{
+                            strtoupper(
+                                auth()->user()?->name[0],
+                            )
+                        }}</p>
+                        <p>{{
+                            strtoupper(
+                                auth()->user()?->name[1],
+                            )
+                        }}</p>
                     </div>
                     <div class="text-sm font-medium text-foreground truncate">
-                        {{auth()->user()?->name}}
+                        {{
+                            auth()->user()
+                                ?->name
+                        }}
                     </div>
                 </div>
 
-                <button x-on:click="$wire.openSettingMenu = !$wire.openSettingMenu" class="cursor-pointer">
+                <button
+                    x-on:click="$wire.openSettingMenu = !$wire.openSettingMenu"
+                    class="cursor-pointer"
+                >
                     <i data-lucide="settings" class="h-4 w-4 text-primary"></i>
                 </button>
             </div>
         </div>
-
     </div>
 </div>
