@@ -92,6 +92,10 @@ new #[Layout('livewire.layouts.app')] class extends Component {
             link: 'unit',
         },
         {
+            title: 'Eventos',
+            link: 'events',
+        },
+        {
             title: 'Requisitos',
             link: 'requirements',
         },
